@@ -8,16 +8,10 @@
 import type { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
 import Env from '@ioc:Adonis/Core/Env'
 import ConfigurationService from 'App/Services/ConfigurationService'
-
-export enum DatabaseConnectionName {
-  MY_SQL = 'mysql',
-}
-
-enum DatabaseConnectionDefaultPort {
-  mysql = 3306,
-}
-
-Env.process()
+import {
+  DatabaseConnectionDefaultPort,
+  DatabaseConnectionName,
+} from 'Config/beans/DatabaseConnectionName'
 
 const databaseConfig: DatabaseConfig = {
   /*

@@ -15,8 +15,8 @@
 import Env from '@ioc:Adonis/Core/Env'
 import { HashDriverName } from 'Config/hash'
 import { DriveDiskName } from 'Config/drive'
-import { DatabaseConnectionName } from 'Config/database'
 import { NodeEnv } from 'App/Services/ConfigurationService'
+import { DatabaseConnectionName } from 'Config/beans/DatabaseConnectionName'
 
 export default Env.rules({
   // server

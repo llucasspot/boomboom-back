@@ -39,15 +39,32 @@ export default class SpotifyController {
     const userId = user.id
     const { name } = request.qs()
 
+    // Perhaps we should have a folder with TS model front
+    type Track = {
+      popularity?: number
+      name: string // song name
+      trackId: string
+      album?: string // album name
+      image?: string // song image
+      artistName?: string
+      uri: string
+    }
+
     const tracks = await this.spotifyService.getTracksByName(userId, name)
 
-    const mappedTracks = tracks?.map((track) => {
+    const mappedTracks: Track[] = tracks?.map((track) => {
+      let artists: string = ''
+      track?.artists.forEach((artist, index) => {
+        artists += index > 0 ? ', ' + artist.name : artist.name
+      })
       return {
         uri: track.uri,
         popularity: track.popularity,
         name: track.name,
         trackId: track.id,
         album: track?.album?.name,
+        image: track?.album?.images[0],
+        artistName: artists,
       }
     })
 

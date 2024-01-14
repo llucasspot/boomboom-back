@@ -5,6 +5,7 @@
  * file.
  */
 
+// @ts-ignore exceptions
 import type { Config } from '@japa/runner'
 import TestUtils from '@ioc:Adonis/Core/TestUtils'
 import { assert, runFailedTests, specReporter, apiClient } from '@japa/preset-adonis'

@@ -19,6 +19,7 @@ process.env.NODE_ENV = NodeEnv.TEST
 import 'reflect-metadata'
 import sourceMapSupport from 'source-map-support'
 import { Ignitor } from '@adonisjs/core/build/standalone'
+// @ts-ignore exceptions
 import { configure, processCliArgs, run, RunnerHooksHandler } from '@japa/runner'
 
 sourceMapSupport.install({ handleUncaughtExceptions: false })
@@ -36,6 +37,7 @@ kernel
       ...processCliArgs(process.argv.slice(2)),
       ...config,
       ...{
+        // @ts-ignore exceptions
         importer: (filePath) => import(filePath),
         setup: app.concat(runnerHooks.setup),
         teardown: runnerHooks.teardown,

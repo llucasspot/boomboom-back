@@ -8,7 +8,9 @@
     "start": "node server.js",
     "test": "node ace test",
     "lint": "eslint . --ext=.ts",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "ts-check": "tsc",
+    "format-check": "prettier --check './**/*.{js,jsx,ts,tsx,json,css,md}'"
   },
   "eslintConfig": {
     "extends": [

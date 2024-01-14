@@ -1,6 +1,10 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import SpotifyService from 'App/Services/SpotifyService'
 import { inject } from '@adonisjs/fold'
+import {
+  FetchTracksByNameResponse,
+  MappedTrack,
+} from 'App/Controllers/Http/beans/FetchTracksByNameResponse'
 
 @inject()
 export default class SpotifyController {
@@ -34,42 +38,30 @@ export default class SpotifyController {
     return mappdTracks
   }
 
-  public async trackByName({ request, auth }: HttpContextContract) {
+  public async trackByName({
+    request,
+    auth,
+  }: HttpContextContract): Promise<FetchTracksByNameResponse> {
     const user = await auth.authenticate()
     const userId = user.id
     const { name } = request.qs()
 
-    // Perhaps we should have a folder with TS model front
-    type Track = {
-      popularity?: number
-      name: string // song name
-      trackId: string
-      album?: string // album name
-      image?: string // song image
-      artistName?: string
-      uri: string
-    }
-
     const tracks = await this.spotifyService.getTracksByName(userId, name)
 
-    const mappedTracks: Track[] = tracks?.map((track) => {
-      let artists: string = ''
-      track?.artists.forEach((artist, index) => {
-        artists += index > 0 ? ', ' + artist.name : artist.name
-      })
+    const mappedTracks: MappedTrack[] = tracks.map((track) => {
+      const artistNames = track.artists?.map((artist) => artist.name).join(', ')
       return {
         uri: track.uri,
         popularity: track.popularity,
         name: track.name,
         trackId: track.id,
         album: track?.album?.name,
-        image: track?.album?.images[0],
-        artistName: artists,
+        image: track?.album?.images?.[0],
+        artistName: artistNames,
       }
     })
 
     return {
-      status: true,
       data: mappedTracks,
     }
   }

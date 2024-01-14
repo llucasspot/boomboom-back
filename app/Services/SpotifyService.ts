@@ -7,6 +7,58 @@ import TechnicalException from 'App/Exceptions/TechnicalException'
 import ConfigurationService from 'App/Services/ConfigurationService'
 import { inject } from '@adonisjs/fold'
 import AuthProviders from 'App/Models/AuthProviders'
+import User from 'App/Models/User'
+
+type SpotifyApiArtist = {
+  external_urls: {
+    spotify: string
+  }
+  href: string
+  id: string
+  name: string
+  type: 'artist'
+  uri: `spotify:artist:${string}`
+}
+
+export type SpotifySearchTrackResponse = {
+  tracks: {
+    items: {
+      album: {
+        album_type: 'album'
+        artists?: SpotifyApiArtist[]
+        available_markets: string[]
+        external_urls: string[]
+        href: string
+        id: string
+        images?: string[]
+        name?: string
+        release_date: '2024-01-05'
+        release_date_precision: 'day'
+        total_tracks: number
+        type: 'album'
+        uri: `spotify:album:${string}`
+      }
+      artists?: SpotifyApiArtist[]
+      available_markets: string[]
+      disc_number: number
+      duration_ms: number
+      explicit: false
+      external_ids: { isrc: string }
+      external_urls: {
+        spotify: string
+      }
+      href: string
+      id: string
+      is_local: false
+      name: string
+      popularity?: number
+      preview_url: string
+      track_number: 5
+      type: 'track'
+      uri: `spotify:track:${string}`
+    }[]
+  }
+}
 
 @inject()
 export default class SpotifyService {
@@ -135,13 +187,19 @@ export default class SpotifyService {
     }
   }
 
-  public async getTracksByName(userId, name) {
+  public async getTracksByName(
+    userId: User['id'],
+    name: string
+  ): Promise<SpotifySearchTrackResponse['tracks']['items']> {
     const social = await AuthProviders.query().where('user_id', userId).first()
-    const resp = await this.axiosInstance.get(`/search?q=track:${name}&type=track`, {
-      headers: {
-        Authorization: `Bearer ${social?.accessToken}`,
-      },
-    })
-    return resp?.data?.tracks?.items
+    const resp = await this.axiosInstance.get<SpotifySearchTrackResponse>(
+      `/search?q=track:${name}&type=track`,
+      {
+        headers: {
+          Authorization: `Bearer ${social?.accessToken}`,
+        },
+      }
+    )
+    return resp.data.tracks.items
   }
 }

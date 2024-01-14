@@ -34,6 +34,7 @@ Route.group(() => {
   Route.group(() => {
     Route.get('/profile/', 'ProfilesController.get')
     Route.post('/profile/', 'ProfilesController.store')
+    Route.post('/profile/avatar', 'ProfilesController.uploadAvatar')
   }).middleware(AuthMiddleware.buildMiddlewareName('api'))
 
   Route.group(() => {

@@ -20,8 +20,8 @@ export default class Profile extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
-  @column()
-  public dateOfBirth: Date
+  @column.date({ autoCreate: false, autoUpdate: false })
+  public dateOfBirth: DateTime
 
   @column()
   public description: string

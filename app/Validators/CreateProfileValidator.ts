@@ -25,14 +25,11 @@ export default class CreateProfileValidator {
    */
 
   public schema = schema.create({
-    dateOfBirth: schema.string(),
-    description: schema.string.nullableAndOptional(),
+    name: schema.string(),
+    dateOfBirth: schema.date({ format: 'yyyy-MM-dd' }),
+    description: schema.string(),
     preferedGenderId: schema.number(),
     trackIds: schema.array().members(schema.string()),
-    avatar: schema.file({
-      size: '5mb',
-      extnames: ['jpg', 'png', 'jpeg'],
-    }),
   })
 
   /**

@@ -6,7 +6,6 @@ import UnAuthorizedException from 'App/Exceptions/UnAuthorizedException'
 import TechnicalException from 'App/Exceptions/TechnicalException'
 import ConfigurationService from 'App/Services/ConfigurationService'
 import { inject } from '@adonisjs/fold'
-import * as console from 'console'
 import AuthProviders from 'App/Models/AuthProviders'
 
 @inject()

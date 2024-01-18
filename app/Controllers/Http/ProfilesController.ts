@@ -8,6 +8,7 @@ import UploadAvatarValidator from 'App/Validators/UploadAvatarValidator'
 import TechnicalException from 'App/Exceptions/TechnicalException'
 import User from 'App/Models/User'
 import Application from '@ioc:Adonis/Core/Application'
+import NotFountException from "App/Exceptions/NotFountException";
 
 @inject()
 export default class ProfilesController {
@@ -18,9 +19,10 @@ export default class ProfilesController {
     const userId = user.id
 
     const profile = await Profile.query().where('user_id', userId).first()
-    return {
-      data: profile,
+    if (!profile) {
+      throw new NotFountException()
     }
+    return profile
   }
 
   public async store({ request, auth, response }: HttpContextContract) {

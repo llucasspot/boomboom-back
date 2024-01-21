@@ -23,18 +23,17 @@ export default class SpotifyController {
     const userId = user.id
     const topTracks = await this.spotifyService.getTracks(userId)
     const mappdTracks = topTracks?.map((track) => {
+      const artistNames = track.artists?.map((artist) => artist.name).join(', ')
       return {
-        // image: track?.preview_url,
-        // uri: track.uri,
+        uri: track.uri,
         popularity: track.popularity,
         name: track.name,
         trackId: track.id,
-        album: track?.albun?.name,
-        // artists: artists,
+        album: track?.album?.name,
+        image: track?.album?.images?.[0],
+        artistName: artistNames,
       }
     })
-    // const savedTracks = await SpotifyService.saveTracks(userId, topTracks);
-
     return mappdTracks
   }
 

@@ -98,12 +98,12 @@ export default class SpotifyService {
 
   public async getTracks(userId) {
     const social = await AuthProviders.query().where('user_id', userId).first()
-    const resp = await this.axiosInstance.get('/me/top/tracks?time_range=medium_term&limit=5', {
+    const resp = await this.axiosInstance.get<SpotifySearchTrackResponse['tracks']>('/me/top/tracks?time_range=medium_term&limit=5', {
       headers: {
         Authorization: `Bearer ${social?.accessToken}`,
       },
     })
-    return resp?.data?.items
+    return resp.data.items
   }
 
   public async saveArtists(userId, artists) {
@@ -157,7 +157,7 @@ export default class SpotifyService {
         Authorization: `Bearer ${social?.accessToken}`,
       },
     })
-    return resp?.data?.tracks
+    return resp.data.tracks
   }
 
   public getTracksData(tracks) {

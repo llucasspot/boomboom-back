@@ -25,21 +25,22 @@ export default class MatchesController {
 
     const users = await User.query()
       .whereNot('id', userId)
-      .preload('profile')
-      .with('profile', (q) => {
+      .preload('profile', (q) => {
         q.where('prefered_gender_id', profile.preferedGenderId)
       })
+      .preload('tracks')
 
     const mappedUsers = users.map((user) => {
       return {
-        id: user.id,
-        name: user.name,
-        avatar: user.profile?.avatar,
+        user: {
+          id: user.id,
+          name: user.name,
+          image: user.profile?.avatar,
+        },
+        songs: user.tracks
       }
     })
-    return {
-      data: mappedUsers,
-    }
+    return mappedUsers
   }
 
   /* mark match */

@@ -7,11 +7,8 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary()
 
-      table.integer('matcher_user_id')
-      table.integer('matched_user_id')
-      table.date('match_date')
-
-      table.tinyint('mutual_match').defaultTo(0)
+      table.string('matcher_user_id').references('id').inTable('users').onDelete('CASCADE')
+      table.string('matched_user_id').references('id').inTable('users').onDelete('CASCADE')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

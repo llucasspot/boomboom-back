@@ -7,14 +7,23 @@ import Env from '@ioc:Adonis/Core/Env'
 import AuthProviders from 'App/Models/AuthProviders'
 import { OpaqueTokenContract } from '@ioc:Adonis/Addons/Auth'
 import Track from 'App/Models/Track'
-import Artist from 'App/Models/Artist'
-import TechnicalException from 'App/Exceptions/TechnicalException'
-import SpotifyService from 'App/Services/SpotifyService'
+import SpotifyService from 'App/_spotify/spotify.service'
+import TrackService from 'App/_track/track.service'
 
 @inject()
 export default class AuthSpotifyController {
-  constructor(private spotifyService: SpotifyService) {}
+  constructor(
+    private spotifyService: SpotifyService,
+    private trackService: TrackService
+  ) {}
 
+  /**
+   * @swagger
+   * /api/auth/spotify:
+   *  get:
+   *    tags:
+   *      - Spotify OAuth
+   */
   public async authorize({ ally }: HttpContextContract) {
     return ally.use('spotify').stateless().redirect()
   }
@@ -45,16 +54,9 @@ export default class AuthSpotifyController {
 
   private async initializeUserData(user: User) {
     const trackExist = await Track.query().where('user_id', user.id)
-    if (!trackExist?.length) {
+    if (!trackExist.length) {
       const topTracks = await this.spotifyService.getTracks(user.id)
-      const topTracksSaved = await this.spotifyService.saveTracks(user.id, topTracks)
-      if (!topTracksSaved?.status) throw Error('Unable to save top tracks')
-    }
-    const artists = await Artist.query().where('user_id', user.id)
-    if (!artists?.length) {
-      const topArtists = await this.spotifyService.getArtists(user.id)
-      const topArtistsSaved = await this.spotifyService.saveArtists(user.id, topArtists)
-      if (!topArtistsSaved?.status) throw new TechnicalException('Unable to save artists tracks')
+      await this.trackService.saveTracks(user.id, topTracks)
     }
   }
 

@@ -1,4 +1,4 @@
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, belongsTo, BelongsTo } from '@ioc:Adonis/Lucid/Orm'
 import { SocialProviders } from '@ioc:Adonis/Addons/Ally'
 import User from 'App/Models/User'
 import { DateTime } from 'luxon'
@@ -51,4 +51,6 @@ export default class AuthProviders extends BaseModel {
    */
   @column()
   public userId: User['id']
+  @belongsTo(() => User)
+  public user: BelongsTo<typeof User>
 }

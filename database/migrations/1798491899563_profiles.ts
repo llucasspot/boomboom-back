@@ -7,11 +7,17 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary()
 
-      table.date('date_of_birth')
+      table.date('date_of_birth').notNullable()
       table.text('description')
-      table.string('avatar')
-      table.integer('prefered_gender_id').unsigned()
+      table.string('avatar_url', 2048)
 
+      table
+        .integer('prefered_gender_id')
+        .unsigned()
+        .references('id')
+        .inTable('genders')
+        .onDelete('RESTRICT')
+      table.integer('gender_id').unsigned().references('id').inTable('genders').onDelete('RESTRICT')
       table.string('user_id').references('id').inTable('users').onDelete('CASCADE')
 
       /**

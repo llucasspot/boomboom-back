@@ -1,4 +1,4 @@
-import { SpotifySearchTrackResponse } from 'App/Services/SpotifyService'
+import { SpotifySearchTrackResponse } from 'App/_spotify/beans/SpotifySearchTrackResponse'
 
 export type MappedTrack = {
   uri: SpotifySearchTrackResponse['tracks']['items'][0]['uri']

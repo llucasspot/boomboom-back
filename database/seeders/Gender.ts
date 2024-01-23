@@ -1,17 +1,17 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
-import Gender from 'App/Models/Gender'
+import Gender, { GenderName } from 'App/Models/Gender'
 
 export default class extends BaseSeeder {
   public async run() {
     await Gender.createMany([
       {
-        name: 'Male',
+        name: GenderName.MALE,
       },
       {
-        name: 'Female',
+        name: GenderName.FEMALE,
       },
       {
-        name: 'Other',
+        name: GenderName.OTHER,
       },
     ])
   }

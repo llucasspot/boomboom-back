@@ -14,7 +14,7 @@ import { ErrorCode } from 'App/Exceptions/ErrorCode'
 |
 */
 export default class BadRequestException extends HttpException {
-  constructor(message?: string, code?: string) {
-    super(message ?? ErrorCode.BAD_REQUEST, 400, code ?? ErrorCode.BAD_REQUEST)
+  constructor(message: string = ErrorCode.BAD_REQUEST, code: string = ErrorCode.BAD_REQUEST) {
+    super(message, 400, code)
   }
 }

@@ -1,23 +1,14 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'artists'
+  protected tableName = 'match_requests'
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary()
 
-      table.string('user_id').references('id').inTable('users').onDelete('CASCADE')
-
-      /* user => track || null */
-      table.string('type')
-
-      table.string('name')
-      table.string('popularity')
-      table.string('followers')
-      table.string('uri')
-      table.string('spotify_artist_id')
-      table.string('artist_image')
+      table.string('matcher_user_id').references('id').inTable('users').onDelete('CASCADE')
+      table.string('matched_user_id').references('id').inTable('users').onDelete('CASCADE')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

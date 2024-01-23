@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "node ace serve --watch",
+    "swagger:generate": "node ace swagger:generate",
+    "dev": "yarn run swagger:generate && node ace serve --watch",
     "build": "node ace build --production",
     "start": "node server.js",
     "test": "node ace test",
@@ -62,6 +63,7 @@
     "@adonisjs/core": "^5.8.0",
     "@adonisjs/lucid": "18.4.0",
     "@adonisjs/repl": "^3.1.0",
+    "adonis5-swagger": "^1.4.1",
     "axios": "^1.6.5",
     "luxon": "^3.4.4",
     "mysql2": "^3.7.0",

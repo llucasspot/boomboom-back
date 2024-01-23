@@ -18,7 +18,8 @@
       "@japa/preset-adonis/build/adonis-typings",
       "@adonisjs/lucid",
       "@adonisjs/ally",
-      "@adonisjs/auth"
+      "@adonisjs/auth",
+      "adonis5-swagger"
     ]
   }
 }

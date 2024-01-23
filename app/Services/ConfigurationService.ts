@@ -1,4 +1,5 @@
 import Env from '@ioc:Adonis/Core/Env'
+import { inject } from '@adonisjs/fold'
 
 export enum NodeEnv {
   DEVELOPMENT = 'development',
@@ -6,10 +7,11 @@ export enum NodeEnv {
   TEST = 'test',
 }
 
+@inject()
 export default class ConfigurationService {
-  public static DEFAULT_SPOTIFY_API_URL = 'https://api.spotify.com/v1'
+  public DEFAULT_SPOTIFY_API_URL = 'https://api.spotify.com/v1'
 
-  public static getSpotifyApiUrl(): string {
+  public getSpotifyApiUrl(): string {
     return Env.get('SPOTIFY_API_URL', this.DEFAULT_SPOTIFY_API_URL)
   }
 

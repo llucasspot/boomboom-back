@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, belongsTo, BelongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User'
 import { v4 as uuid } from 'uuid'
 import { beforeCreate } from '@adonisjs/lucid/build/src/Orm/Decorators'
@@ -8,7 +8,7 @@ import { beforeCreate } from '@adonisjs/lucid/build/src/Orm/Decorators'
  * @swagger
  * components:
  *  schemas:
- *    Match:
+ *    MatchRequest:
  *      type: object
  *      properties:
  *        id:
@@ -22,10 +22,10 @@ import { beforeCreate } from '@adonisjs/lucid/build/src/Orm/Decorators'
  *        matchedUserId:
  *          type: string
  */
-export default class Match extends BaseModel {
+export default class MatchRequest extends BaseModel {
   @beforeCreate()
-  public static async createUUID(match: Match) {
-    match.id = uuid()
+  public static async createUUID(matchRequest: MatchRequest) {
+    matchRequest.id = uuid()
   }
 
   @column({ isPrimary: true })

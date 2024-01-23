@@ -13,8 +13,28 @@ import { ErrorCode } from 'App/Exceptions/ErrorCode'
 | new UnAuthorizedException('message', 500, 'E_RUNTIME_EXCEPTION')
 |
 */
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *    NotFountException:
+ *      description: Not Fount Exception
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              errors:
+ *                type: array
+ *                items:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                      example: "NOT_FOUND: NOT_FOUND"
+ */
 export default class NotFountException extends HttpException {
-  constructor(message?: string, code?: string) {
-    super(message ?? ErrorCode.NOT_FOUND, 404, code ?? ErrorCode.NOT_FOUND)
+  constructor(message: string = ErrorCode.NOT_FOUND, code: string = ErrorCode.NOT_FOUND) {
+    super(message, 404, code)
   }
 }

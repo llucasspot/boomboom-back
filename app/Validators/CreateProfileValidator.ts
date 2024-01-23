@@ -29,6 +29,7 @@ export default class CreateProfileValidator {
     dateOfBirth: schema.date({ format: 'yyyy-MM-dd' }),
     description: schema.string(),
     preferedGenderId: schema.number(),
+    genderId: schema.number(),
     trackIds: schema.array().members(schema.string()),
   })
 

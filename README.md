@@ -99,5 +99,4 @@ Upon user registration, it's crucial to save the user's Spotify preferences for 
 
 ## API Documentation
 
-- For the Login API (http://localhost:3333/api/signin), open it in a browser as the request will be redirected to Spotify for authentication. This API won't work in Postman.
-- All other APIs are provided in the Postman collection.
+- Swagger documentation : http://localhost:3333/docs

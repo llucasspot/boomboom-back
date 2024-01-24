@@ -33,8 +33,6 @@ export default class AuthController {
    *      - bearerAuth: []
    *    tags:
    *      - Auth
-   *    produces:
-   *      - application/json
    *    responses:
    *      401:
    *        $ref: '#/components/responses/UnAuthorizedException'
@@ -68,7 +66,8 @@ export default class AuthController {
    *        email:
    *          type: string
    *        dateOfBirth:
-   *          type: DateTime
+   *          type: string
+   *          format: date-time
    *        description:
    *          type: string
    *        avatarUrl:
@@ -99,8 +98,6 @@ export default class AuthController {
    *      - bearerAuth: []
    *    tags:
    *      - Auth
-   *    produces:
-   *      - application/json
    *    responses:
    *      401:
    *        $ref: '#/components/responses/UnAuthorizedException'
@@ -148,8 +145,6 @@ export default class AuthController {
    *      - bearerAuth: []
    *    tags:
    *      - Auth
-   *    produces:
-   *      - application/json
    *    responses:
    *      401:
    *        $ref: '#/components/responses/UnAuthorizedException'
@@ -178,8 +173,6 @@ export default class AuthController {
    *      - bearerAuth: []
    *    tags:
    *      - Auth
-   *    produces:
-   *      - application/json
    *    responses:
    *      401:
    *        $ref: '#/components/responses/UnAuthorizedException'

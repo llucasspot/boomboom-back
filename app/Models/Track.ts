@@ -24,9 +24,11 @@ import { v4 as uuid } from 'uuid'
  *        spotifyId:
  *          type: string
  *        createdAt:
- *          type: DateTime
+ *          type: string
+ *          format: date-time
  *        updatedAt:
- *          type: DateTime
+ *          type: string
+ *          format: date-time
  *        userId:
  *          type: string
  */

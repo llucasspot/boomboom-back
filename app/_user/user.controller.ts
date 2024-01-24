@@ -7,9 +7,12 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ErrorMessage } from 'App/Exceptions/ErrorMessage'
 import MatchRequest from 'App/Models/MatchRequest'
 import ForbiddenException from 'App/Exceptions/ForbidenException'
+import UserService from 'App/_user/user.service'
 
 @inject()
 export default class UserController {
+  constructor(private userService: UserService) {}
+
   /**
    * @swagger
    * /api/users/{userId}/fav:
@@ -19,8 +22,6 @@ export default class UserController {
    *      - bearerAuth: []
    *    tags:
    *      - User
-   *    produces:
-   *      - application/json
    *    parameters:
    *      - in: path
    *        name: userId
@@ -88,8 +89,6 @@ export default class UserController {
    *      - bearerAuth: []
    *    tags:
    *      - User
-   *    produces:
-   *      - application/json
    *    responses:
    *      401:
    *        $ref: '#/components/responses/UnAuthorizedException'
@@ -100,19 +99,10 @@ export default class UserController {
    *            schema:
    *              type: object
    *              properties:
-   *                user:
-   *                  type: object
-   *                  properties:
-   *                    id:
-   *                      $ref: '#/components/schemas/User/properties/id'
-   *                    name:
-   *                      $ref: '#/components/schemas/User/properties/name'
-   *                    image:
-   *                      type: string
-   *                songs:
+   *                data:
    *                  type: array
    *                  items:
-   *                    $ref: '#/components/schemas/Track'
+   *                    $ref: '#/components/schemas/ProfileToShow'
    */
   public async getProfiles({ auth }: HttpContextContract) {
     const authUser = await auth.authenticate()
@@ -122,22 +112,6 @@ export default class UserController {
       throw new ForbiddenException(ErrorMessage.PROFILE_NOT_SET)
     }
 
-    const users = await User.query()
-      .whereNot('id', user.id)
-      .preload('profile', (q) => {
-        q.where('gender_id', userProfile.preferedGenderId)
-      })
-      .preload('tracks')
-
-    return users.map((user) => {
-      return {
-        user: {
-          id: user.id,
-          name: user.name,
-          image: user.profile?.avatarUrl,
-        },
-        songs: user.tracks,
-      }
-    })
+    return await this.userService.getProfilesToShowForProfile(userProfile)
   }
 }

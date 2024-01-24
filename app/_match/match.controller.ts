@@ -14,8 +14,6 @@ export default class MatchController {
    *      - bearerAuth: []
    *    tags:
    *      - Match
-   *    produces:
-   *      - application/json
    *    responses:
    *      401:
    *        $ref: '#/components/responses/UnAuthorizedException'

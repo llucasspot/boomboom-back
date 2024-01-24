@@ -15,13 +15,16 @@ import { beforeCreate } from '@adonisjs/lucid/build/src/Orm/Decorators'
  *        id:
  *          type: string
  *        dateOfBirth:
- *          type: DateTime
+ *          type: string
+ *          format: date-time
  *        description:
  *          type: string
  *        createdAt:
- *          type: DateTime
+ *          type: string
+ *          format: date-time
  *        updatedAt:
- *          type: DateTime
+ *          type: string
+ *          format: date-time
  *        preferedGender:
  *          type: number
  *        gender:

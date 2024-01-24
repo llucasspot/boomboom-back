@@ -62,8 +62,6 @@ export default class SpotifyController {
    *      - bearerAuth: []
    *    tags:
    *      - Match
-   *    produces:
-   *      - application/json
    *    responses:
    *      401:
    *        $ref: '#/components/responses/UnAuthorizedException'
@@ -94,8 +92,6 @@ export default class SpotifyController {
    *      - bearerAuth: []
    *    tags:
    *      - Match
-   *    produces:
-   *      - application/json
    *    responses:
    *      401:
    *        $ref: '#/components/responses/UnAuthorizedException'

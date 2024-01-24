@@ -23,6 +23,9 @@ export default class AuthSpotifyController {
    *  get:
    *    tags:
    *      - Spotify OAuth
+   *    responses:
+   *      200:
+   *        description: Success
    */
   public async authorize({ ally }: HttpContextContract) {
     return ally.use('spotify').stateless().redirect()

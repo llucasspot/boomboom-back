@@ -1,11 +1,11 @@
 import axios, { AxiosInstance } from 'axios'
-import UnAuthorizedException from 'App/Exceptions/UnAuthorizedException'
-import TechnicalException from 'App/Exceptions/TechnicalException'
-import ConfigurationService from 'App/Services/ConfigurationService'
 import { inject } from '@adonisjs/fold'
-import AuthProviders from 'App/Models/AuthProviders'
-import User from 'App/Models/User'
-import { SpotifySearchTrackResponse } from 'App/_spotify/beans/SpotifySearchTrackResponse'
+import ConfigurationService from '#services/configuration.service'
+import UnAuthorizedException from '#exceptions/un_authorized.exception'
+import TechnicalException from '#exceptions/technical.exception'
+import AuthProviders from '#models/auth_providers'
+import User from '#models/user'
+import { SpotifySearchTrackResponse } from './beans/spotify_search_track.response.js'
 
 @inject()
 export default class SpotifyService {
@@ -40,7 +40,7 @@ export default class SpotifyService {
   }
 
   // TODO utility ?
-  public async getArtists(userId: User['id']) {
+  async getArtists(userId: User['id']) {
     const accessToken = await this.getSpotifyAccessToken(userId)
     const resp = await this.axiosInstance.get('/me/top/artists', {
       headers: {
@@ -50,7 +50,7 @@ export default class SpotifyService {
     return resp?.data?.items
   }
 
-  public async getTracks(userId): Promise<SpotifySearchTrackResponse['tracks']['items']> {
+  async getTracks(userId: User['id']): Promise<SpotifySearchTrackResponse['tracks']['items']> {
     const accessToken = await this.getSpotifyAccessToken(userId)
     const resp = await this.axiosInstance.get<SpotifySearchTrackResponse['tracks']>(
       '/me/top/tracks?time_range=medium_term&limit=5',
@@ -63,7 +63,7 @@ export default class SpotifyService {
     return resp.data.items
   }
 
-  public async getTracksByIds(userId: User['id'], trackIds: string[]) {
+  async getTracksByIds(userId: User['id'], trackIds: string[]) {
     const commaSeparatedIds = trackIds.join(',')
     const accessToken = await this.getSpotifyAccessToken(userId)
     const resp = await this.axiosInstance.get(`/tracks?ids=${commaSeparatedIds}`, {
@@ -74,7 +74,7 @@ export default class SpotifyService {
     return resp.data.tracks
   }
 
-  public async getTracksByName(
+  async getTracksByName(
     userId: User['id'],
     name: string
   ): Promise<SpotifySearchTrackResponse['tracks']['items']> {

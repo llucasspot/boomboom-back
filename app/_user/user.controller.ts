@@ -1,13 +1,13 @@
 import { inject } from '@adonisjs/fold'
-import BadRequestException from 'App/Exceptions/BadRequestException'
-import User from 'App/Models/User'
-import NotFountException from 'App/Exceptions/NotFountException'
-import Match from 'App/Models/Match'
-import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { ErrorMessage } from 'App/Exceptions/ErrorMessage'
-import MatchRequest from 'App/Models/MatchRequest'
-import ForbiddenException from 'App/Exceptions/ForbidenException'
-import UserService from 'App/_user/user.service'
+import UserService from './user.service.js'
+import BadRequestException from '#exceptions/bad_request.exception'
+import { ErrorMessage } from '#exceptions/beans/error_message'
+import User from '#models/user'
+import NotFountException from '#exceptions/not_fount.exception'
+import MatchRequest from '#models/match_request'
+import ForbiddenException from '#exceptions/forbiden.exception'
+import { HttpContext } from '@adonisjs/core/http'
+import Match from '#models/match'
 
 @inject()
 export default class UserController {
@@ -45,8 +45,8 @@ export default class UserController {
    *                  type: string
    *                  example: "It's a mutual match"
    */
-  public async favUser({ auth, params: { userId: requestedId } }: HttpContextContract) {
-    const user = await auth.authenticate()
+  async favUser({ auth, params: { userId: requestedId } }: HttpContext) {
+    const user = auth.getUserOrFail()
 
     if (user.id === requestedId) {
       throw new BadRequestException(ErrorMessage.SELF_FAV)
@@ -104,14 +104,17 @@ export default class UserController {
    *                  items:
    *                    $ref: '#/components/schemas/ProfileToShow'
    */
-  public async getProfiles({ auth }: HttpContextContract) {
-    const authUser = await auth.authenticate()
+  async getProfiles({ auth }: HttpContext) {
+    const authUser = auth.getUserOrFail()
     const user = await User.query().where('id', authUser.id).preload('profile').first()
     const userProfile = user?.profile
     if (!userProfile) {
       throw new ForbiddenException(ErrorMessage.PROFILE_NOT_SET)
     }
 
-    return await this.userService.getProfilesToShowForProfile(userProfile)
+    const data = await this.userService.getProfilesToShowForProfile(userProfile)
+    return {
+      data,
+    }
   }
 }

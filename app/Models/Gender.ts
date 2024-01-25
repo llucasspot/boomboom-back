@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column } from '@adonisjs/lucid/orm'
 
 export enum GenderName {
   MALE = 'Male',
@@ -27,14 +27,14 @@ export enum GenderName {
  */
 export default class Gender extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
+  declare id: number
 
   @column()
-  public name: GenderName
+  declare name: GenderName
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  declare updatedAt: DateTime | null
 }

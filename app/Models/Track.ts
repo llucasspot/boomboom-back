@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo, BelongsTo } from '@ioc:Adonis/Lucid/Orm'
-import User from 'App/Models/User'
-import { beforeCreate } from '@adonisjs/lucid/build/src/Orm/Decorators'
+import { BaseModel, column, belongsTo, beforeCreate } from '@adonisjs/lucid/orm'
 import { v4 as uuid } from 'uuid'
+import User from '#models/user'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 /**
  * @swagger
@@ -34,39 +34,39 @@ import { v4 as uuid } from 'uuid'
  */
 export default class Track extends BaseModel {
   @beforeCreate()
-  public static async createUUID(track: Track) {
+  static async createUUID(track: Track) {
     track.id = uuid()
   }
 
   @column({ isPrimary: true })
-  public id: string
+  declare id: string
 
   @column()
-  public name: string
+  declare name: string
 
   @column()
-  public albumName?: string
+  declare albumName?: string
 
   @column()
-  public spotifyUri: string
+  declare spotifyUri: string
 
   @column()
-  public spotifyImage: string
+  declare spotifyImage: string
 
   @column()
-  public spotifyId: string
+  declare spotifyId: string
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  declare updatedAt: DateTime | null
 
   /**
    * User relation
    */
   @column()
-  public userId: User['id']
+  declare userId: User['id']
   @belongsTo(() => User)
-  public user: BelongsTo<typeof User>
+  declare user: BelongsTo<typeof User>
 }

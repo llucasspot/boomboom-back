@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
-import User from 'App/Models/User'
 import { v4 as uuid } from 'uuid'
-import { beforeCreate } from '@adonisjs/lucid/build/src/Orm/Decorators'
+import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
+import User from '#models/user'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 /**
  * @swagger
@@ -26,32 +26,32 @@ import { beforeCreate } from '@adonisjs/lucid/build/src/Orm/Decorators'
  */
 export default class Match extends BaseModel {
   @beforeCreate()
-  public static async createUUID(match: Match) {
+  static async createUUID(match: Match) {
     match.id = uuid()
   }
 
   @column({ isPrimary: true })
-  public id: string
+  declare id: string
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  declare updatedAt: DateTime | null
 
   /**
    * Matcher user relation
    */
   @column()
-  public matcherUserId: User['id']
+  declare matcherUserId: User['id']
   @belongsTo(() => User, { foreignKey: 'matcherUserId' })
-  public matcherUser: BelongsTo<typeof User>
+  declare matcherUser: BelongsTo<typeof User>
 
   /**
    * Matched user relation
    */
   @column()
-  public matchedUserId: User['id']
+  declare matchedUserId: User['id']
   @belongsTo(() => User, { foreignKey: 'matchedUserId' })
-  public matchedUser: BelongsTo<typeof User>
+  declare matchedUser: BelongsTo<typeof User>
 }

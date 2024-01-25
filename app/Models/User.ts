@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon'
-import { column, BaseModel, hasMany, HasMany, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeCreate, column, hasMany, hasOne } from '@adonisjs/lucid/orm'
+import { AccessToken, DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { v4 as uuid } from 'uuid'
-import { beforeCreate } from '@adonisjs/lucid/build/src/Orm/Decorators'
-import Track from 'App/Models/Track'
-import Profile from 'App/Models/Profile'
+import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
+import Profile from '#models/profile'
+import Track from '#models/track'
 
 /**
  * @swagger
@@ -28,35 +29,45 @@ import Profile from 'App/Models/Profile'
  *          type: string
  */
 export default class User extends BaseModel {
+  static authTokens = DbAccessTokensProvider.forModel(User, {
+    expiresIn: '30 days',
+    prefix: 'oat_',
+    table: 'auth_access_tokens',
+    type: 'auth_token',
+    tokenSecretLength: 40,
+  })
+
+  currentAccessToken?: AccessToken
+
   @beforeCreate()
-  public static async createUUID(user: User) {
+  static async createUUID(user: User) {
     user.id = uuid()
   }
 
   @column({ isPrimary: true })
-  public id: string
+  declare id: string
 
   @column()
-  public email: string
+  declare name: string | null
 
   @column()
-  public name: string
+  declare email: string
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  declare updatedAt: DateTime | null
 
   /**
    * Profile relation
    */
   @hasOne(() => Profile)
-  public profile: HasOne<typeof Profile>
+  declare profile: HasOne<typeof Profile>
 
   /**
    * Track relation
    */
   @hasMany(() => Track)
-  public tracks: HasMany<typeof Track>
+  declare tracks: HasMany<typeof Track>
 }

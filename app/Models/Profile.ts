@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo, BelongsTo } from '@ioc:Adonis/Lucid/Orm'
-import Gender from './Gender'
-import User from 'App/Models/User'
 import { v4 as uuid } from 'uuid'
-import { beforeCreate } from '@adonisjs/lucid/build/src/Orm/Decorators'
+import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
+import Gender from '#models/gender'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import User from '#models/user'
 
 /**
  * @swagger
@@ -34,49 +34,49 @@ import { beforeCreate } from '@adonisjs/lucid/build/src/Orm/Decorators'
  */
 export default class Profile extends BaseModel {
   @beforeCreate()
-  public static async createUUID(profile: Profile) {
+  static async createUUID(profile: Profile) {
     profile.id = uuid()
   }
 
   @column({ isPrimary: true })
-  public id: string
+  declare id: string
 
   @column.date({ autoCreate: false, autoUpdate: false })
-  public dateOfBirth: DateTime
+  declare dateOfBirth: DateTime
 
   @column()
-  public description: string
+  declare description: string
 
   @column()
-  public avatarUrl: string
+  declare avatarUrl: string
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  declare updatedAt: DateTime | null
 
   /**
    * User prefered gender relation
    */
   @column()
-  public preferedGenderId: Gender['id']
+  declare preferedGenderId: Gender['id']
   @belongsTo(() => Gender, { foreignKey: 'preferedGenderId' })
-  public preferedGender: BelongsTo<typeof Gender>
+  declare preferedGender: BelongsTo<typeof Gender>
 
   /**
    * User Gender relation
    */
   @column()
-  public genderId: Gender['id']
+  declare genderId: Gender['id']
   @belongsTo(() => Gender, { foreignKey: 'genderId' })
-  public gender: BelongsTo<typeof Gender>
+  declare gender: BelongsTo<typeof Gender>
 
   /**
    * User relation
    */
   @column()
-  public userId: User['id']
+  declare userId: User['id']
   @belongsTo(() => User)
-  public user: BelongsTo<typeof User>
+  declare user: BelongsTo<typeof User>
 }

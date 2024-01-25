@@ -1,9 +1,9 @@
-import BaseSchema from '@ioc:Adonis/Lucid/Schema'
+import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
   protected tableName = 'tracks'
 
-  public async up() {
+  async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary()
       table.string('name', 255)
@@ -22,7 +22,7 @@ export default class extends BaseSchema {
     })
   }
 
-  public async down() {
+  async down() {
     this.schema.dropTable(this.tableName)
   }
 }

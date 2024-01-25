@@ -1,19 +1,18 @@
-import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { inject } from '@adonisjs/fold'
-import Profile from 'App/Models/Profile'
-import NotFountException from 'App/Exceptions/NotFountException'
 import { DateTime } from 'luxon'
-import Gender from 'App/Models/Gender'
-import UploadAvatarValidator from 'App/Validators/UploadAvatarValidator'
-import Application from '@ioc:Adonis/Core/Application'
-import User from 'App/Models/User'
-import CreateProfileValidator from 'App/Validators/CreateProfileValidator'
-import TrackService from 'App/_track/track.service'
+import Gender from '#models/gender'
+import TrackService from '../_track/track.service.js'
+import { HttpContext } from '@adonisjs/core/http'
+import User from '#models/user'
+import Profile from '#models/profile'
+import NotFountException from '#exceptions/not_fount.exception'
+import app from '@adonisjs/core/services/app'
+import vine from '@vinejs/vine'
 
 type UserInfo = {
   id: string
   email: string
-  name: string
+  name: string | null
   dateOfBirth: DateTime
   description: string
   avatarUrl: string
@@ -39,8 +38,9 @@ export default class AuthController {
    *      200:
    *        description: Success
    */
-  public async logout({ auth }: HttpContextContract) {
-    await auth.use('api').revoke()
+  async logout({ auth }: HttpContext) {
+    const user = auth.getUserOrFail()
+    await User.authTokens.delete(user, user.currentAccessToken.identifier)
     return {}
   }
 
@@ -48,7 +48,7 @@ export default class AuthController {
    * in the react-native app, the webview know if the auth is success if it is redirect
    * to the url "http://.../success?userToken=..." and get the api token from the params
    */
-  public async success({}: HttpContextContract) {
+  async success({}: HttpContext) {
     return {}
   }
 
@@ -108,8 +108,8 @@ export default class AuthController {
    *            schema:
    *              $ref: '#/components/schemas/SerializedUser'
    */
-  public async getUserInfo({ auth }: HttpContextContract): Promise<UserInfo> {
-    const user = await auth.authenticate()
+  async getUserInfo({ auth }: HttpContext): Promise<UserInfo> {
+    const user = auth.getUserOrFail()
     const profile = await Profile.query().where('user_id', user.id).first()
     if (!profile) {
       throw new NotFountException()
@@ -126,8 +126,8 @@ export default class AuthController {
     data: Pick<Profile, 'dateOfBirth' | 'description' | 'preferedGenderId' | 'genderId'>
   ) {
     const profile = (await Profile.query().where('user_id', user.id).first()) ?? new Profile()
-    // @ts-ignore TODO
-    profile.dateOfBirth = data.dateOfBirth
+    // @ts-ignore TODO error type
+    profile.dateOfBirth = DateTime.fromJSDate(data.dateOfBirth)
     profile.description = data.description
     // TODO url
     profile.avatarUrl = `/uploads/${this.buildAvatarFileName(user)}`
@@ -155,9 +155,20 @@ export default class AuthController {
    *            schema:
    *              $ref: '#/components/schemas/SerializedUser'
    */
-  public async createUserProfile({ auth, request, response }: HttpContextContract): Promise<void> {
-    const user = await auth.authenticate()
-    const { name, trackIds, ...validatedBody } = await request.validate(CreateProfileValidator)
+  async createUserProfile({ auth, request, response }: HttpContext): Promise<void> {
+    const user = auth.getUserOrFail()
+    const schema = vine.object({
+      name: vine.string(),
+      dateOfBirth: vine.date({ formats: ['YYYY-MM-DD'] }),
+      description: vine.string(),
+      preferedGenderId: vine.number(),
+      genderId: vine.number(),
+      trackIds: vine.array(vine.string()),
+    })
+    const { name, trackIds, ...validatedBody } = await vine.validate({
+      schema,
+      data: request.body(),
+    })
     await this.trackService.updateFavorityTrack(user.id, trackIds)
     const newUserData = await this.updateUser(user, { name })
     // @ts-ignore TODO see dateOfBirth
@@ -183,10 +194,22 @@ export default class AuthController {
    *            schema:
    *              $ref: '#/components/schemas/SerializedUser'
    */
-  public async uploadUserAvatar({ auth, request }: HttpContextContract): Promise<UserInfo> {
-    const user = await auth.authenticate()
-    const { avatar } = await request.validate(UploadAvatarValidator)
-    await avatar.move(Application.tmpPath('uploads'), {
+  async uploadUserAvatar({ auth, request }: HttpContext): Promise<UserInfo> {
+    const user = auth.getUserOrFail()
+    const schema = vine.object({
+      avatar: vine.file({
+        size: '5mb',
+        extnames: ['jpg', 'png', 'jpeg'],
+      }),
+    })
+    console.log(request.body())
+    const { avatar } = await vine.validate({
+      schema,
+      data: {
+        avatar: request.file('avatar'),
+      },
+    })
+    await avatar.move(app.tmpPath('uploads'), {
       name: this.buildAvatarFileName(user),
       overwrite: true,
     })

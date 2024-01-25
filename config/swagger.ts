@@ -1,4 +1,5 @@
-import { SwaggerConfig } from '@ioc:Adonis/Addons/Swagger'
+// TODO v6 block the swagger v5 lib
+// import { SwaggerConfig } from '@ioc:Adonis/Addons/Swagger'
 
 export default {
   uiEnabled: true, //disable or enable swaggerUi route
@@ -32,4 +33,5 @@ export default {
   },
   mode: process.env.NODE_ENV === 'production' ? 'PRODUCTION' : 'RUNTIME',
   specFilePath: 'docs/swagger.json',
-} as SwaggerConfig
+// } as SwaggerConfig
+}

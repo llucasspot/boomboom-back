@@ -1,43 +1,21 @@
-/**
- * Config source: https://git.io/JOdi5
- *
- * Feel free to let us know via PR, if you find something broken in this config
- * file.
- */
+import env from '#start/env'
+import { defineConfig, services } from '@adonisjs/ally'
+import { InferSocialProviders } from '@adonisjs/ally/types'
 
-import { AllyConfig } from '@ioc:Adonis/Addons/Ally'
-import Env from '@ioc:Adonis/Core/Env'
-
-export enum OAuthProviderName {
-  SPOTIFY = 'spotify',
-}
-
-/*
-|--------------------------------------------------------------------------
-| Ally Config
-|--------------------------------------------------------------------------
-|
-| The `AllyConfig` relies on the `SocialProviders` interface which is
-| defined inside `contracts/ally.ts` file.
-|
-*/
-const allyConfig: AllyConfig = {
-  /*
-  |--------------------------------------------------------------------------
-  | Spotify driver
-  |--------------------------------------------------------------------------
-  */
-  [OAuthProviderName.SPOTIFY]: {
-    driver: 'spotify',
-    clientId: Env.get('SPOTIFY_CLIENT_ID'),
-    clientSecret: Env.get('SPOTIFY_CLIENT_SECRET'),
-    callbackUrl: Env.get(
+const allyConfig = defineConfig({
+  spotify: services.spotify({
+    clientId: env.get('SPOTIFY_CLIENT_ID'),
+    clientSecret: env.get('SPOTIFY_CLIENT_SECRET'),
+    callbackUrl: env.get(
       'SPOTIFY_CALLBACK_URL',
-      `${Env.get('BASE_API_URL')}/auth/spotify/callback`
+      `${env.get('BASE_API_URL')}/auth/spotify/callback`
     ),
     scopes: ['user-read-email', 'user-top-read', 'user-follow-read'],
-    showDialog: false,
-  },
-}
+  }),
+})
 
 export default allyConfig
+
+declare module '@adonisjs/ally/types' {
+  interface SocialProviders extends InferSocialProviders<typeof allyConfig> {}
+}

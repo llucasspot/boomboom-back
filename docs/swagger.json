@@ -10,6 +10,8 @@
       "bearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" }
     },
     "schemas": {
+      "id": { "type": "string", "format": "uuid" },
+      "name": { "type": "string" },
       "SerializedTrack": {
         "type": "object",
         "properties": {
@@ -24,10 +26,12 @@
               "height": { "type": "number" },
               "url": { "type": "string" },
               "width": { "type": "number" }
-            }
+            },
+            "required": ["height", "url", "width"]
           },
           "artistName": { "type": "string" }
-        }
+        },
+        "required": ["uri", "popularity", "name", "trackId", "uri"]
       },
       "ProfileToShow": {
         "type": "object",
@@ -38,10 +42,12 @@
               "id": { "$ref": "#/components/schemas/User/properties/id" },
               "name": { "$ref": "#/components/schemas/User/properties/name" },
               "image": { "type": "string" }
-            }
+            },
+            "required": ["id", "name"]
           },
           "songs": { "type": "array", "items": { "$ref": "#/components/schemas/Track" } }
-        }
+        },
+        "required": ["user", "songs"]
       },
       "SerializedUser": {
         "type": "object",
@@ -54,7 +60,16 @@
           "avatarUrl": { "type": "string" },
           "genderId": { "type": "string" },
           "preferedGenderId": { "type": "string" }
-        }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "dateOfBirth",
+          "avatarUrl",
+          "genderId",
+          "preferedGenderId"
+        ]
       },
       "Gender": {
         "type": "object",
@@ -63,17 +78,8 @@
           "name": { "type": "string" },
           "createdAt": { "type": "string", "format": "date-time" },
           "updatedAt": { "type": "string", "format": "date-time" }
-        }
-      },
-      "Match": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" },
-          "matcherUserId": { "type": "string" },
-          "matchedUserId": { "type": "string" }
-        }
+        },
+        "required": ["id", "name", "createdAt", "updatedAt"]
       },
       "MatchRequest": {
         "type": "object",
@@ -83,7 +89,19 @@
           "updatedAt": { "type": "string", "format": "date-time" },
           "matcherUserId": { "type": "string" },
           "matchedUserId": { "type": "string" }
-        }
+        },
+        "required": ["id", "createdAt", "updatedAt", "matcherUserId", "matchedUserId"]
+      },
+      "Match": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "matcherUserId": { "type": "string" },
+          "matchedUserId": { "type": "string" }
+        },
+        "required": ["id", "createdAt", "updatedAt", "matcherUserId", "matchedUserId"]
       },
       "Profile": {
         "type": "object",
@@ -93,10 +111,19 @@
           "description": { "type": "string" },
           "createdAt": { "type": "string", "format": "date-time" },
           "updatedAt": { "type": "string", "format": "date-time" },
-          "preferedGender": { "type": "number" },
-          "gender": { "type": "number" },
+          "preferedGenderId": { "type": "number" },
+          "genderId": { "type": "number" },
           "userId": { "type": "string" }
-        }
+        },
+        "required": [
+          "id",
+          "dateOfBirth",
+          "createdAt",
+          "updatedAt",
+          "preferedGenderId",
+          "genderId",
+          "userId"
+        ]
       },
       "Track": {
         "type": "object",
@@ -110,7 +137,8 @@
           "createdAt": { "type": "string", "format": "date-time" },
           "updatedAt": { "type": "string", "format": "date-time" },
           "userId": { "type": "string" }
-        }
+        },
+        "required": ["id", "createdAt", "updatedAt", "userId"]
       },
       "User": {
         "type": "object",
@@ -121,7 +149,8 @@
           "createdAt": { "type": "string", "format": "date-time" },
           "updatedAt": { "type": "string", "format": "date-time" },
           "profileId": { "type": "string" }
-        }
+        },
+        "required": ["id", "name", "email", "createdAt", "updatedAt"]
       }
     },
     "responses": {
@@ -138,10 +167,12 @@
                     "type": "object",
                     "properties": {
                       "message": { "type": "string", "example": "NOT_FOUND: NOT_FOUND" }
-                    }
+                    },
+                    "required": ["message"]
                   }
                 }
-              }
+              },
+              "required": ["errors"]
             }
           }
         }
@@ -162,10 +193,12 @@
                         "type": "string",
                         "example": "E_UNAUTHORIZED_ACCESS: Unauthorized access"
                       }
-                    }
+                    },
+                    "required": ["message"]
                   }
                 }
-              }
+              },
+              "required": ["errors"]
             }
           }
         }
@@ -192,11 +225,13 @@
                         "properties": {
                           "id": { "$ref": "#/components/schemas/User/properties/id" },
                           "name": { "$ref": "#/components/schemas/User/properties/name" }
-                        }
+                        },
+                        "required": ["id", "name"]
                       }
                     },
                     "message": { "type": "string", "example": "Mutual match history" }
-                  }
+                  },
+                  "required": ["data", "message"]
                 }
               }
             }
@@ -255,7 +290,8 @@
                   "type": "object",
                   "properties": {
                     "message": { "type": "string", "example": "It's a mutual match" }
-                  }
+                  },
+                  "required": ["message"]
                 }
               }
             }
@@ -281,7 +317,8 @@
                       "type": "array",
                       "items": { "$ref": "#/components/schemas/ProfileToShow" }
                     }
-                  }
+                  },
+                  "required": ["data"]
                 }
               }
             }
@@ -289,6 +326,9 @@
           "401": { "$ref": "#/components/responses/UnAuthorizedException" }
         }
       }
+    },
+    "/api/auth/spotify": {
+      "get": { "tags": ["Spotify OAuth"], "responses": { "200": { "description": "Success" } } }
     },
     "/api/auth/logout": {
       "get": {
@@ -342,9 +382,6 @@
           "401": { "$ref": "#/components/responses/UnAuthorizedException" }
         }
       }
-    },
-    "/api/auth/spotify": {
-      "get": { "tags": ["Spotify OAuth"], "responses": { "200": { "description": "Success" } } }
     }
   },
   "tags": []

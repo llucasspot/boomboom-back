@@ -1,5 +1,5 @@
 import { inject } from '@adonisjs/fold'
-import Profile from 'App/Models/Profile'
+import Profile from '#models/profile'
 
 @inject()
 export default class UserService {
@@ -19,10 +19,16 @@ export default class UserService {
    *              $ref: '#/components/schemas/User/properties/name'
    *            image:
    *              type: string
+   *          required:
+   *            - id
+   *            - name
    *        songs:
-   *         type: array
-   *         items:
-   *           $ref: '#/components/schemas/Track'
+   *          type: array
+   *          items:
+   *            $ref: '#/components/schemas/Track'
+   *      required:
+   *        - user
+   *        - songs
    */
   private serializeProfileToShow(profile: Profile) {
     return {
@@ -35,7 +41,7 @@ export default class UserService {
     }
   }
 
-  public async getProfilesToShowForProfile(profile: Profile) {
+  async getProfilesToShowForProfile(profile: Profile) {
     // TODO add localisation feature
     const profiles = await Profile.query()
       .where('gender_id', profile.preferedGenderId)
@@ -44,8 +50,8 @@ export default class UserService {
         q.preload('tracks')
       })
 
-    return profiles.map((profile) => {
-      return this.serializeProfileToShow(profile)
+    return profiles.map((_profile: Profile) => {
+      return this.serializeProfileToShow(_profile)
     })
   }
 }

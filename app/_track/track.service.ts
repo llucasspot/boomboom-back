@@ -1,14 +1,11 @@
-import Track from 'App/Models/Track'
 import { inject } from '@adonisjs/fold'
-import User from 'App/Models/User'
-import { SpotifySearchTrackResponse } from 'App/_spotify/beans/SpotifySearchTrackResponse'
+import User from '#models/user'
+import { SpotifySearchTrackResponse } from '../_spotify/beans/spotify_search_track.response.js'
+import Track from '#models/track'
 
 @inject()
 export default class TrackService {
-  public async saveTracks(
-    userId: User['id'],
-    tracks: SpotifySearchTrackResponse['tracks']['items']
-  ) {
+  async saveTracks(userId: User['id'], tracks: SpotifySearchTrackResponse['tracks']['items']) {
     for (let track of tracks) {
       const newTrack = new Track()
       newTrack.name = track.name
@@ -21,20 +18,20 @@ export default class TrackService {
     }
   }
 
-  public getTracksData(tracks) {
+  getTracksData(tracks: Track[]) {
     const mappdTracks = tracks?.map((track) => {
       return {
-        popularity: track.popularity,
+        // popularity: track.popularity,
         name: track.name,
         trackId: track.id,
-        album: track?.albun?.name,
+        // album: track?.albun?.name,
       }
     })
 
     return mappdTracks
   }
 
-  public async updateFavorityTrack(userId, trackIds) {
+  async updateFavorityTrack(userId: User['id'], trackIds: Track['id'][]) {
     // TODO ??
     const markFavorite = await Track.query()
       .where('user_id', userId)

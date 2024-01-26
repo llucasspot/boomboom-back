@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/fold'
-import User from 'App/Models/User'
-import Match from 'App/Models/Match'
-import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { HttpContext } from '@adonisjs/core/http'
+import Match from '#models/match'
+import User from '#models/user'
 
 @inject()
 export default class MatchController {
@@ -32,12 +32,18 @@ export default class MatchController {
    *                        $ref: '#/components/schemas/User/properties/id'
    *                      name:
    *                        $ref: '#/components/schemas/User/properties/name'
+   *                    required:
+   *                      - id
+   *                      - name
    *                message:
    *                  type: string
    *                  example: "Mutual match history"
+   *              required:
+   *                - data
+   *                - message
    */
-  public async getMatches({ auth }: HttpContextContract) {
-    const user = await auth.authenticate()
+  async getMatches({ auth }: HttpContext) {
+    const user = auth.getUserOrFail()
 
     const matches = await Match.query()
       .where('matcher_user_id', user.id)

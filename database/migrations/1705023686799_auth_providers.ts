@@ -1,9 +1,9 @@
-import BaseSchema from '@ioc:Adonis/Lucid/Schema'
+import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
   protected tableName = 'auth_providers'
 
-  public async up() {
+  async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.string('name', 255).notNullable()
       table.string('provider_user_id', 255).notNullable().unique()
@@ -19,7 +19,7 @@ export default class extends BaseSchema {
     })
   }
 
-  public async down() {
+  async down() {
     this.schema.dropTable(this.tableName)
   }
 }

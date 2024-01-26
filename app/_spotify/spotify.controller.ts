@@ -1,11 +1,8 @@
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import SpotifyService from 'App/_spotify/spotify.service'
 import { inject } from '@adonisjs/fold'
-import {
-  FetchTracksByNameResponse,
-  MappedTrack,
-} from 'App/_spotify/beans/FetchTracksByNameResponse'
-import { SpotifySearchTrackResponse } from 'App/_spotify/beans/SpotifySearchTrackResponse'
+import SpotifyService from './spotify.service.js'
+import { SpotifySearchTrackResponse } from './beans/spotify_search_track.response.js'
+import { HttpContext } from '@adonisjs/core/http'
+import { FetchTracksByNameResponse, MappedTrack } from './beans/fetch_tracks_by_name.response.js'
 
 @inject()
 export default class SpotifyController {
@@ -37,8 +34,18 @@ export default class SpotifyController {
    *              type: string
    *            width:
    *              type: number
+   *          required:
+   *            - height
+   *            - url
+   *            - width
    *        artistName:
    *          type: string
+   *      required:
+   *        - uri
+   *        - popularity
+   *        - name
+   *        - trackId
+   *        - uri
    */
   private serializeTrack(track: SpotifySearchTrackResponse['tracks']['items'][0]) {
     const artistNames = track.artists?.map((artist) => artist.name).join(', ')
@@ -74,8 +81,8 @@ export default class SpotifyController {
    *              items:
    *                $ref: '#/components/schemas/SerializedTrack'
    */
-  public async getTopFiveTracks({ auth }: HttpContextContract) {
-    const user = await auth.authenticate()
+  async getTopFiveTracks({ auth }: HttpContext) {
+    const user = auth.getUserOrFail()
     const userId = user.id
     const topTracks = await this.spotifyService.getTracks(userId)
     return topTracks?.map((track) => {
@@ -107,11 +114,8 @@ export default class SpotifyController {
    *                  items:
    *                    $ref: '#/components/schemas/SerializedTrack'
    */
-  public async getTrackByName({
-    request,
-    auth,
-  }: HttpContextContract): Promise<FetchTracksByNameResponse> {
-    const user = await auth.authenticate()
+  async getTrackByName({ request, auth }: HttpContext): Promise<FetchTracksByNameResponse> {
+    const user = auth.getUserOrFail()
     const userId = user.id
     const { name } = request.qs()
 

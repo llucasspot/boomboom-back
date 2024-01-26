@@ -1,62 +1,44 @@
-/**
- * Config source: https://git.io/JesV9
- *
- * Feel free to let us know via PR, if you find something broken in this config
- * file.
- */
-
-import type { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
-import Env from '@ioc:Adonis/Core/Env'
-import ConfigurationService from 'App/Services/ConfigurationService'
+import app from '@adonisjs/core/services/app'
+import { defineConfig } from '@adonisjs/lucid'
 import {
   DatabaseConnectionDefaultPort,
   DatabaseConnectionName,
-} from 'Config/beans/DatabaseConnectionName'
+} from '#config/beans/database_connection_name'
+import env from '#start/env'
 
-const databaseConfig: DatabaseConfig = {
-  /*
-  |--------------------------------------------------------------------------
-  | Connection
-  |--------------------------------------------------------------------------
-  |
-  | The primary connection for making database queries across the application
-  | You can use any key from the `connections` object defined in this same
-  | file.
-  |
-  */
-  connection: Env.get('DB_CONNECTION', DatabaseConnectionName.MY_SQL),
-
+const dbConfig = defineConfig({
+  connection: env.get('DB_CONNECTION', DatabaseConnectionName.MY_SQL),
   connections: {
-    /*
-    |--------------------------------------------------------------------------
-    | MySQL config
-    |--------------------------------------------------------------------------
-    |
-    | Configuration for MySQL database. Make sure to install the driver
-    | from npm when using this connection
-    |
-    | npm i mysql2
-    |
-    */
     [DatabaseConnectionName.MY_SQL]: {
       client: 'mysql2',
       connection: {
-        host: Env.get('DATABASE_HOST', '0.0.0.0'),
-        port: Env.get(
+        host: env.get('DATABASE_HOST', '0.0.0.0'),
+        port: env.get(
           'DATABASE_PORT',
           DatabaseConnectionDefaultPort[DatabaseConnectionName.MY_SQL]
         ),
-        user: Env.get('DATABASE_USER', 'root'),
-        password: Env.get('DATABASE_PASSWORD', ''),
-        database: Env.get('DATABASE_NAME'),
+        user: env.get('DATABASE_USER', 'root'),
+        password: env.get('DATABASE_PASSWORD', ''),
+        database: env.get('DATABASE_NAME'),
       },
       migrations: {
         naturalSort: true,
+        paths: ['database/migrations'],
       },
-      healthCheck: false,
-      debug: ConfigurationService.isServerInDevMode(),
+      debug: !app.inProduction,
+    },
+    [DatabaseConnectionName.SQLITE]: {
+      client: 'better-sqlite3',
+      connection: {
+        filename: app.tmpPath('db.sqlite3'),
+      },
+      useNullAsDefault: true,
+      migrations: {
+        naturalSort: true,
+        paths: ['database/migrations'],
+      },
     },
   },
-}
+})
 
-export default databaseConfig
+export default dbConfig

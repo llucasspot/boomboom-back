@@ -34,6 +34,7 @@ export default defineConfig({
     () => import('@adonisjs/session/session_provider'),
     () => import('@adonisjs/auth/auth_provider'),
     () => import('@adonisjs/ally/ally_provider'),
+    () => import('adonisjs-6-swagger/swagger_provider'),
   ],
 
   /*

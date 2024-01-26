@@ -5,173 +5,6 @@
     "version": "1.0.0",
     "description": "My application with swagger docs"
   },
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" }
-    },
-    "schemas": {
-      "SerializedTrack": {
-        "type": "object",
-        "properties": {
-          "uri": { "type": "string" },
-          "popularity": { "type": "number" },
-          "name": { "type": "string" },
-          "trackId": { "type": "string" },
-          "album": { "type": "string" },
-          "image": {
-            "type": "object",
-            "properties": {
-              "height": { "type": "number" },
-              "url": { "type": "string" },
-              "width": { "type": "number" }
-            }
-          },
-          "artistName": { "type": "string" }
-        }
-      },
-      "ProfileToShow": {
-        "type": "object",
-        "properties": {
-          "user": {
-            "type": "object",
-            "properties": {
-              "id": { "$ref": "#/components/schemas/User/properties/id" },
-              "name": { "$ref": "#/components/schemas/User/properties/name" },
-              "image": { "type": "string" }
-            }
-          },
-          "songs": { "type": "array", "items": { "$ref": "#/components/schemas/Track" } }
-        }
-      },
-      "SerializedUser": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "name": { "type": "string" },
-          "email": { "type": "string" },
-          "dateOfBirth": { "type": "string", "format": "date-time" },
-          "description": { "type": "string" },
-          "avatarUrl": { "type": "string" },
-          "genderId": { "type": "string" },
-          "preferedGenderId": { "type": "string" }
-        }
-      },
-      "Gender": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "number" },
-          "name": { "type": "string" },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" }
-        }
-      },
-      "Match": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" },
-          "matcherUserId": { "type": "string" },
-          "matchedUserId": { "type": "string" }
-        }
-      },
-      "MatchRequest": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" },
-          "matcherUserId": { "type": "string" },
-          "matchedUserId": { "type": "string" }
-        }
-      },
-      "Profile": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "dateOfBirth": { "type": "string", "format": "date-time" },
-          "description": { "type": "string" },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" },
-          "preferedGender": { "type": "number" },
-          "gender": { "type": "number" },
-          "userId": { "type": "string" }
-        }
-      },
-      "Track": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "name": { "type": "string" },
-          "albumName": { "type": "string" },
-          "spotifyUri": { "type": "string" },
-          "spotifyImage": { "type": "string" },
-          "spotifyId": { "type": "string" },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" },
-          "userId": { "type": "string" }
-        }
-      },
-      "User": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "name": { "type": "string" },
-          "email": { "type": "string" },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" },
-          "profileId": { "type": "string" }
-        }
-      }
-    },
-    "responses": {
-      "NotFountException": {
-        "description": "Not Fount Exception",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "errors": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "message": { "type": "string", "example": "NOT_FOUND: NOT_FOUND" }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "UnAuthorizedException": {
-        "description": "Unauthorized access",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "errors": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "type": "string",
-                        "example": "E_UNAUTHORIZED_ACCESS: Unauthorized access"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
   "paths": {
     "/api/matches/": {
       "get": {
@@ -290,6 +123,9 @@
         }
       }
     },
+    "/api/auth/spotify": {
+      "get": { "tags": ["Spotify OAuth"], "responses": { "200": { "description": "Success" } } }
+    },
     "/api/auth/logout": {
       "get": {
         "security": [{ "bearerAuth": [] }],
@@ -342,9 +178,170 @@
           "401": { "$ref": "#/components/responses/UnAuthorizedException" }
         }
       }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SerializedTrack": {
+        "type": "object",
+        "properties": {
+          "uri": { "type": "string" },
+          "popularity": { "type": "number" },
+          "name": { "type": "string" },
+          "trackId": { "type": "string" },
+          "album": { "type": "string" },
+          "image": {
+            "type": "object",
+            "properties": {
+              "height": { "type": "number" },
+              "url": { "type": "string" },
+              "width": { "type": "number" }
+            }
+          },
+          "artistName": { "type": "string" }
+        }
+      },
+      "ProfileToShow": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": { "$ref": "#/components/schemas/User/properties/id" },
+              "name": { "$ref": "#/components/schemas/User/properties/name" },
+              "image": { "type": "string" }
+            }
+          },
+          "songs": { "type": "array", "items": { "$ref": "#/components/schemas/Track" } }
+        }
+      },
+      "SerializedUser": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "dateOfBirth": { "type": "string", "format": "date-time" },
+          "description": { "type": "string" },
+          "avatarUrl": { "type": "string" },
+          "genderId": { "type": "string" },
+          "preferedGenderId": { "type": "string" }
+        }
+      },
+      "Gender": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "name": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "MatchRequest": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "matcherUserId": { "type": "string" },
+          "matchedUserId": { "type": "string" }
+        }
+      },
+      "Match": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "matcherUserId": { "type": "string" },
+          "matchedUserId": { "type": "string" }
+        }
+      },
+      "Profile": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "dateOfBirth": { "type": "string", "format": "date-time" },
+          "description": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "preferedGender": { "type": "number" },
+          "gender": { "type": "number" },
+          "userId": { "type": "string" }
+        }
+      },
+      "Track": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "albumName": { "type": "string" },
+          "spotifyUri": { "type": "string" },
+          "spotifyImage": { "type": "string" },
+          "spotifyId": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "userId": { "type": "string" }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "profileId": { "type": "string" }
+        }
+      }
     },
-    "/api/auth/spotify": {
-      "get": { "tags": ["Spotify OAuth"], "responses": { "200": { "description": "Success" } } }
+    "responses": {
+      "NotFountException": {
+        "description": "Not Fount Exception",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string", "example": "NOT_FOUND: NOT_FOUND" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "UnAuthorizedException": {
+        "description": "Unauthorized access",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "E_UNAUTHORIZED_ACCESS: Unauthorized access"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "tags": []

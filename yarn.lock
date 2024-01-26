@@ -190,7 +190,7 @@
     "@phc/format" "^1.0.0"
     "@poppinss/utils" "^6.7.1"
 
-"@adonisjs/http-server@^7.0.1":
+"@adonisjs/http-server@^7.0.1", "@adonisjs/http-server@^7.0.2":
   version "7.0.2"
   resolved "https://registry.npmjs.org/@adonisjs/http-server/-/http-server-7.0.2.tgz"
   integrity sha512-WFMTPxHdr4U9YXZqPxsTCXznlcj4g5phZHhe4JRT21Atedtz/hPMzRCmNOts2wIU9AP5YD6CYCyFnE/1VC2ecA==
@@ -1061,14 +1061,16 @@ acorn@^8.4.1, acorn@^8.5.0, acorn@^8.9.0:
   resolved "https://registry.npmjs.org/acorn/-/acorn-8.11.3.tgz"
   integrity sha512-Y9rRfJG5jcKOE0CLisYbojUjIrIEE7AGMzA/Sm4BslANhbS+cDMpgBdcPT91oJ7OuJ9hYJBx59RjbhxVnrF8Xg==
 
-adonis5-swagger@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/adonis5-swagger/-/adonis5-swagger-1.4.1.tgz#a8f6f9f687a2c2cb2c4990de190fbacda0134321"
-  integrity sha512-XO5tD1R9sJSxdaRWwQ2FhfsQwHgUgx2RU6JPJi4vPn09aXAMH9RvwsRWYPIlhFQyUVMP0toFyxfFyFT2eRjyMA==
+adonisjs-6-swagger@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/adonisjs-6-swagger/-/adonisjs-6-swagger-1.0.0.tgz#a26b0d5f724ddc288764bd018804e9983671bf33"
+  integrity sha512-oAc+JEuvunRlrp7wqxyAWWhWjVBmcd+NabnIhcZSpogqsL731j36ahJIlQ9LT5McMFVz79b/SBpvEjGdwsfZyg==
   dependencies:
-    mime "^3.0.0"
-    swagger-jsdoc "^6.1.0"
-    swagger-ui-dist "^4.1.3"
+    "@adonisjs/http-server" "^7.0.2"
+    "@poppinss/utils" "^6.7.1"
+    mime "^4.0.1"
+    swagger-jsdoc "^6.2.8"
+    swagger-ui-dist "^5.11.0"
 
 aggregate-error@^4.0.0:
   version "4.0.1"
@@ -3093,10 +3095,10 @@ mime@2.6.0:
   resolved "https://registry.npmjs.org/mime/-/mime-2.6.0.tgz"
   integrity sha512-USPkMeET31rOMiarsBNIHZKLGgvKc/LrjofAnBlOttf5ajRvqiRA8QsenbcooctK6d6Ts6aqZXBA+XbkKthiQg==
 
-mime@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/mime/-/mime-3.0.0.tgz#b374550dca3a0c18443b0c950a6a58f1931cf7a7"
-  integrity sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==
+mime@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-4.0.1.tgz#ad7563d1bfe30253ad97dedfae2b1009d01b9470"
+  integrity sha512-5lZ5tyrIfliMXzFtkYyekWbtRXObT9OWa8IwQ5uxTBDHucNNwniRqo0yInflj+iYi5CBa6qxadGzGarDfuEOxA==
 
 mimic-fn@^2.1.0:
   version "2.1.0"
@@ -4194,7 +4196,7 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-swagger-jsdoc@^6.1.0:
+swagger-jsdoc@^6.2.8:
   version "6.2.8"
   resolved "https://registry.yarnpkg.com/swagger-jsdoc/-/swagger-jsdoc-6.2.8.tgz#6d33d9fb07ff4a7c1564379c52c08989ec7d0256"
   integrity sha512-VPvil1+JRpmJ55CgAtn8DIcpBs0bL5L3q5bVQvF4tAW/k/9JYSj7dCpaYCAv5rufe0vcCbBRQXGvzpkWjvLklQ==
@@ -4218,10 +4220,10 @@ swagger-schema-official@2.0.0-bab6bed:
   resolved "https://registry.npmjs.org/swagger-schema-official/-/swagger-schema-official-2.0.0-bab6bed.tgz"
   integrity sha512-rCC0NWGKr/IJhtRuPq/t37qvZHI/mH4I4sxflVM+qgVe5Z2uOCivzWaVbuioJaB61kvm5UvB7b49E+oBY0M8jA==
 
-swagger-ui-dist@^4.1.3:
-  version "4.19.1"
-  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-4.19.1.tgz#c6d53ba0961a006c6b6b4323ba700e87f31da856"
-  integrity sha512-n/gFn+R7G/BXWwl5UZLw6F1YgWOlf3zkwGlsPhTMhNtAAolBGKg0JS5b2RKt5NI6/hSopVaSrki2wTIMUDDy2w==
+swagger-ui-dist@^5.11.0:
+  version "5.11.0"
+  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-5.11.0.tgz#9bcfd75278b1fa9c36fe52f206f8fc611470547c"
+  integrity sha512-j0PIATqQSEFGOLmiJOJZj1X1Jt6bFIur3JpY7+ghliUnfZs0fpWDdHEkn9q7QUlBtKbkn6TepvSxTqnE8l3s0A==
 
 synckit@^0.6.0:
   version "0.6.2"

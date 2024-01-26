@@ -24,6 +24,11 @@ export enum GenderName {
  *        updatedAt:
  *          type: string
  *          format: date-time
+ *      required:
+ *        - id
+ *        - name
+ *        - createdAt
+ *        - updatedAt
  */
 export default class Gender extends BaseModel {
   @column({ isPrimary: true })

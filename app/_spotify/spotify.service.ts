@@ -1,17 +1,31 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { inject } from '@adonisjs/fold'
 import ConfigurationService from '#services/configuration.service'
-import UnAuthorizedException from '#exceptions/un_authorized.exception'
-import TechnicalException from '#exceptions/technical.exception'
 import AuthProviders from '#models/auth_providers'
 import User from '#models/user'
 import { SpotifySearchTrackResponse } from './beans/spotify_search_track.response.js'
+import UnAuthorizedException from '#exceptions/un_authorized.exception'
+import TechnicalException from '#exceptions/technical.exception'
 
 @inject()
 export default class SpotifyService {
   private axiosInstance = this.buildAxiosInstance()
 
   constructor(private configurationService: ConfigurationService) {}
+
+  private async buildOptionsWithAuthorization(
+    userId: User['id'],
+    { headers, ...options }: AxiosRequestConfig = {}
+  ): Promise<AxiosRequestConfig> {
+    const accessToken = await this.getSpotifyAccessToken(userId)
+    return {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        ...headers,
+      },
+      ...options,
+    }
+  }
 
   private buildAxiosInstance(): AxiosInstance {
     const axiosInstance = axios.create({
@@ -41,36 +55,27 @@ export default class SpotifyService {
 
   // TODO utility ?
   async getArtists(userId: User['id']) {
-    const accessToken = await this.getSpotifyAccessToken(userId)
-    const resp = await this.axiosInstance.get('/me/top/artists', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
+    const resp = await this.axiosInstance.get(
+      '/me/top/artists',
+      await this.buildOptionsWithAuthorization(userId)
+    )
     return resp?.data?.items
   }
 
   async getTracks(userId: User['id']): Promise<SpotifySearchTrackResponse['tracks']['items']> {
-    const accessToken = await this.getSpotifyAccessToken(userId)
     const resp = await this.axiosInstance.get<SpotifySearchTrackResponse['tracks']>(
       '/me/top/tracks?time_range=medium_term&limit=5',
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      await this.buildOptionsWithAuthorization(userId)
     )
     return resp.data.items
   }
 
   async getTracksByIds(userId: User['id'], trackIds: string[]) {
     const commaSeparatedIds = trackIds.join(',')
-    const accessToken = await this.getSpotifyAccessToken(userId)
-    const resp = await this.axiosInstance.get(`/tracks?ids=${commaSeparatedIds}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
+    const resp = await this.axiosInstance.get(
+      `/tracks?ids=${commaSeparatedIds}`,
+      await this.buildOptionsWithAuthorization(userId)
+    )
     return resp.data.tracks
   }
 
@@ -78,14 +83,9 @@ export default class SpotifyService {
     userId: User['id'],
     name: string
   ): Promise<SpotifySearchTrackResponse['tracks']['items']> {
-    const accessToken = await this.getSpotifyAccessToken(userId)
     const resp = await this.axiosInstance.get<SpotifySearchTrackResponse>(
       `/search?q=track:${name}&type=track`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      await this.buildOptionsWithAuthorization(userId)
     )
     return resp.data.tracks.items
   }

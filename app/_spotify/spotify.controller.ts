@@ -34,8 +34,18 @@ export default class SpotifyController {
    *              type: string
    *            width:
    *              type: number
+   *          required:
+   *            - height
+   *            - url
+   *            - width
    *        artistName:
    *          type: string
+   *      required:
+   *        - uri
+   *        - popularity
+   *        - name
+   *        - trackId
+   *        - uri
    */
   private serializeTrack(track: SpotifySearchTrackResponse['tracks']['items'][0]) {
     const artistNames = track.artists?.map((artist) => artist.name).join(', ')

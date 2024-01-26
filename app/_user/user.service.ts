@@ -19,10 +19,16 @@ export default class UserService {
    *              $ref: '#/components/schemas/User/properties/name'
    *            image:
    *              type: string
+   *          required:
+   *            - id
+   *            - name
    *        songs:
-   *         type: array
-   *         items:
-   *           $ref: '#/components/schemas/Track'
+   *          type: array
+   *          items:
+   *            $ref: '#/components/schemas/Track'
+   *      required:
+   *        - user
+   *        - songs
    */
   private serializeProfileToShow(profile: Profile) {
     return {

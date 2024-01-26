@@ -32,6 +32,10 @@ import { Exception } from '@adonisjs/core/exceptions'
  *                    message:
  *                      type: string
  *                      example: "NOT_FOUND: NOT_FOUND"
+ *                  required:
+ *                    - message
+ *            required:
+ *              - errors
  */
 export default class NotFountException extends Exception {
   constructor(message: string = ErrorCode.NOT_FOUND, code: string = ErrorCode.NOT_FOUND) {

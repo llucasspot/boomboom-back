@@ -10,6 +10,8 @@ import AuthProviders from '#models/auth_providers'
 import env from '#start/env'
 import { AccessToken } from '@adonisjs/auth/access_tokens'
 import { DateTime } from 'luxon'
+import TechnicalException from '#exceptions/technical.exception'
+import { ErrorMessage } from '#exceptions/beans/error_message'
 
 @inject()
 export default class AuthSpotifyController {
@@ -56,6 +58,15 @@ export default class AuthSpotifyController {
     return spotify
   }
 
+  private async useSpotifyUser(ally: AllyService) {
+    const spotify = this.useSpotify(ally)
+    try {
+      return await spotify.user()
+    } catch (err: any) {
+      throw new TechnicalException(ErrorMessage.ALLY)
+    }
+  }
+
   private async initializeUserData(user: User) {
     const trackExist = await Track.query().where('user_id', user.id)
     if (!trackExist.length) {
@@ -65,8 +76,7 @@ export default class AuthSpotifyController {
   }
 
   async callback({ ally, response }: HttpContext) {
-    const spotify = this.useSpotify(ally)
-    const { token, email, id: providerUserId, name } = await spotify.user()
+    const { token, email, id: providerUserId, name } = await this.useSpotifyUser(ally)
     const user = await User.firstOrCreate(
       {
         email: email as string,

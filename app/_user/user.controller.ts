@@ -44,6 +44,8 @@ export default class UserController {
    *                message:
    *                  type: string
    *                  example: "It's a mutual match"
+   *              required:
+   *                - message
    */
   async favUser({ auth, params: { userId: requestedId } }: HttpContext) {
     const user = auth.getUserOrFail()
@@ -103,6 +105,8 @@ export default class UserController {
    *                  type: array
    *                  items:
    *                    $ref: '#/components/schemas/ProfileToShow'
+   *              required:
+   *                - data
    */
   async getProfiles({ auth }: HttpContext) {
     const authUser = auth.getUserOrFail()

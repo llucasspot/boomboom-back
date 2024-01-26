@@ -31,6 +31,11 @@ import type { BelongsTo } from '@adonisjs/lucid/types/relations'
  *          format: date-time
  *        userId:
  *          type: string
+ *      required:
+ *        - id
+ *        - createdAt
+ *        - updatedAt
+ *        - userId
  */
 export default class Track extends BaseModel {
   @beforeCreate()

@@ -27,6 +27,12 @@ import Track from '#models/track'
  *          format: date-time
  *        profileId:
  *          type: string
+ *      required:
+ *        - id
+ *        - name
+ *        - email
+ *        - createdAt
+ *        - updatedAt
  */
 export default class User extends BaseModel {
   static authTokens = DbAccessTokensProvider.forModel(User, {

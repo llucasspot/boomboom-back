@@ -76,6 +76,14 @@ export default class AuthController {
    *          type: string
    *        preferedGenderId:
    *          type: string
+   *      required:
+   *        - id
+   *        - email
+   *        - name
+   *        - dateOfBirth
+   *        - avatarUrl
+   *        - genderId
+   *        - preferedGenderId
    */
   private serializeUserInfo(user: User, profile: Profile) {
     return {

@@ -32,6 +32,10 @@ import { Exception } from '@adonisjs/core/exceptions'
  *                    message:
  *                      type: string
  *                      example: "E_UNAUTHORIZED_ACCESS: Unauthorized access"
+ *                  required:
+ *                    - message
+ *            required:
+ *              - errors
  */
 export default class UnAuthorizedException extends Exception {
   constructor(message: string = ErrorCode.UN_AUTHORIZED, code: string = ErrorCode.UN_AUTHORIZED) {

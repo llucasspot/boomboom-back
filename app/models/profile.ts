@@ -25,12 +25,20 @@ import User from '#models/user'
  *        updatedAt:
  *          type: string
  *          format: date-time
- *        preferedGender:
+ *        preferedGenderId:
  *          type: number
- *        gender:
+ *        genderId:
  *          type: number
  *        userId:
  *          type: string
+ *      required:
+ *        - id
+ *        - dateOfBirth
+ *        - createdAt
+ *        - updatedAt
+ *        - preferedGenderId
+ *        - genderId
+ *        - userId
  */
 export default class Profile extends BaseModel {
   @beforeCreate()

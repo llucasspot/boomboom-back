@@ -32,9 +32,15 @@ export default class MatchController {
    *                        $ref: '#/components/schemas/User/properties/id'
    *                      name:
    *                        $ref: '#/components/schemas/User/properties/name'
+   *                    required:
+   *                      - id
+   *                      - name
    *                message:
    *                  type: string
    *                  example: "Mutual match history"
+   *              required:
+   *                - data
+   *                - message
    */
   async getMatches({ auth }: HttpContext) {
     const user = auth.getUserOrFail()

@@ -23,6 +23,12 @@ import type { BelongsTo } from '@adonisjs/lucid/types/relations'
  *          type: string
  *        matchedUserId:
  *          type: string
+ *      required:
+ *        - id
+ *        - createdAt
+ *        - updatedAt
+ *        - matcherUserId
+ *        - matchedUserId
  */
 export default class Match extends BaseModel {
   @beforeCreate()

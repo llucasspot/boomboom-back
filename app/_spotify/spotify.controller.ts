@@ -17,6 +17,7 @@ export default class SpotifyController {
    *      properties:
    *        uri:
    *          type: string
+   *          format: uri
    *        popularity:
    *          type: number
    *        name:
@@ -32,6 +33,7 @@ export default class SpotifyController {
    *              type: number
    *            url:
    *              type: string
+   *              format: uri
    *            width:
    *              type: number
    *          required:
@@ -68,7 +70,7 @@ export default class SpotifyController {
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *      - Match
+   *      - Spotify
    *    responses:
    *      401:
    *        $ref: '#/components/responses/UnAuthorizedException'
@@ -92,13 +94,13 @@ export default class SpotifyController {
 
   /**
    * @swagger
-   * /api/spotify/top-five-tracks:
+   * /api/spotify/track-by-name:
    *  get:
    *    summary: get user spotify top five tracks
    *    security:
    *      - bearerAuth: []
    *    tags:
-   *      - Match
+   *      - Spotify
    *    responses:
    *      401:
    *        $ref: '#/components/responses/UnAuthorizedException'
@@ -113,6 +115,8 @@ export default class SpotifyController {
    *                  type: array
    *                  items:
    *                    $ref: '#/components/schemas/SerializedTrack'
+   *              required:
+   *                - data
    */
   async getTrackByName({ request, auth }: HttpContext): Promise<FetchTracksByNameResponse> {
     const user = auth.getUserOrFail()

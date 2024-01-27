@@ -72,6 +72,7 @@ export default class AuthController {
    *          type: string
    *        avatarUrl:
    *          type: string
+   *          format: uri
    *        genderId:
    *          type: string
    *        preferedGenderId:

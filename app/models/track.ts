@@ -19,8 +19,10 @@ import type { BelongsTo } from '@adonisjs/lucid/types/relations'
  *          type: string
  *        spotifyUri:
  *          type: string
+ *          format: uri
  *        spotifyImage:
  *          type: string
+ *          format: uri
  *        spotifyId:
  *          type: string
  *        createdAt:

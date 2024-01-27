@@ -15,7 +15,7 @@
       "SerializedTrack": {
         "type": "object",
         "properties": {
-          "uri": { "type": "string" },
+          "uri": { "type": "string", "format": "uri" },
           "popularity": { "type": "number" },
           "name": { "type": "string" },
           "trackId": { "type": "string" },
@@ -24,7 +24,7 @@
             "type": "object",
             "properties": {
               "height": { "type": "number" },
-              "url": { "type": "string" },
+              "url": { "type": "string", "format": "uri" },
               "width": { "type": "number" }
             },
             "required": ["height", "url", "width"]
@@ -57,7 +57,7 @@
           "email": { "type": "string" },
           "dateOfBirth": { "type": "string", "format": "date-time" },
           "description": { "type": "string" },
-          "avatarUrl": { "type": "string" },
+          "avatarUrl": { "type": "string", "format": "uri" },
           "genderId": { "type": "string" },
           "preferedGenderId": { "type": "string" }
         },
@@ -131,8 +131,8 @@
           "id": { "type": "string" },
           "name": { "type": "string" },
           "albumName": { "type": "string" },
-          "spotifyUri": { "type": "string" },
-          "spotifyImage": { "type": "string" },
+          "spotifyUri": { "type": "string", "format": "uri" },
+          "spotifyImage": { "type": "string", "format": "uri" },
           "spotifyId": { "type": "string" },
           "createdAt": { "type": "string", "format": "date-time" },
           "updatedAt": { "type": "string", "format": "date-time" },
@@ -244,7 +244,28 @@
       "get": {
         "summary": "get user spotify top five tracks",
         "security": [{ "bearerAuth": [] }],
-        "tags": ["Match"],
+        "tags": ["Spotify"],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SerializedTrack" }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/UnAuthorizedException" }
+        }
+      }
+    },
+    "/api/spotify/track-by-name": {
+      "get": {
+        "summary": "get user spotify top five tracks",
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Spotify"],
         "responses": {
           "200": {
             "description": "Success",
@@ -252,13 +273,13 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "items": { "$ref": "#/components/schemas/SerializedTrack" },
                   "properties": {
                     "data": {
                       "type": "array",
                       "items": { "$ref": "#/components/schemas/SerializedTrack" }
                     }
-                  }
+                  },
+                  "required": ["data"]
                 }
               }
             }

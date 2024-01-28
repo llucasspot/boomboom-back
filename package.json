@@ -65,6 +65,7 @@
     "luxon": "^3.4.4",
     "mysql2": "^3.8.0",
     "reflect-metadata": "^0.2.1",
+    "sharp": "^0.33.2",
     "uuid": "^9.0.1"
   },
   "eslintConfig": {

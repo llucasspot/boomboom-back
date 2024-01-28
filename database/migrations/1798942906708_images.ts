@@ -1,23 +1,18 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
+import { ImageType } from '#models/image'
 
 export default class extends BaseSchema {
-  protected tableName = 'profiles'
+  protected tableName = 'images'
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary()
+      table.string('file_name', 2048).notNullable()
+      table.enum('type', Object.values(ImageType)).notNullable()
+      table.integer('height').nullable()
+      table.integer('width').nullable()
 
-      table.date('date_of_birth').notNullable()
-      table.text('description')
-
-      table
-        .integer('prefered_gender_id')
-        .unsigned()
-        .references('id')
-        .inTable('genders')
-        .onDelete('RESTRICT')
-      table.integer('gender_id').unsigned().references('id').inTable('genders').onDelete('RESTRICT')
-      table.string('user_id').references('id').inTable('users').onDelete('CASCADE')
+      table.string('user_id').references('id').inTable('users').onDelete('CASCADE').notNullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

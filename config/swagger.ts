@@ -36,6 +36,18 @@ export default {
           name: {
             type: 'string',
           },
+          preferedGenderId: {
+            type: 'number',
+          },
+          genderId: {
+            type: 'number',
+          },
+          description: {
+            type: 'string',
+          },
+          dateOfBirth: {
+            type: 'string',
+          },
         },
       },
     },

@@ -31,6 +31,7 @@ router
         router.post('/auth/logout', [AuthController, 'logout'])
         router.get('/auth/profile', [AuthController, 'getUserInfo'])
         router.post('/auth/profile', [AuthController, 'createUserProfile'])
+        router.get('/auth/profile/avatar', [AuthController, 'getUserAvatar'])
         router.post('/auth/profile/avatar', [AuthController, 'uploadUserAvatar'])
       })
       .use(

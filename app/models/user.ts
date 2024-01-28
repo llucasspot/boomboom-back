@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid'
 import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 import Profile from '#models/profile'
 import Track from '#models/track'
+import Image from '#models/image'
 
 /**
  * @swagger
@@ -70,6 +71,12 @@ export default class User extends BaseModel {
    */
   @hasOne(() => Profile)
   declare profile: HasOne<typeof Profile>
+
+  /**
+   * Image relation
+   */
+  @hasMany(() => Image)
+  declare images: HasMany<typeof Image>
 
   /**
    * Track relation

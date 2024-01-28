@@ -1,5 +1,7 @@
 import { inject } from '@adonisjs/fold'
 import Profile from '#models/profile'
+import env from '#start/env'
+import User from '#models/user'
 
 @inject()
 export default class UserService {
@@ -35,10 +37,15 @@ export default class UserService {
       user: {
         id: profile.user.id,
         name: profile.user.name,
-        image: profile.avatarUrl,
+        image: this.buildUserAvatarUrl(profile.user.id),
       },
       songs: profile.user.tracks,
     }
+  }
+
+  private buildUserAvatarUrl(userId: User['id']) {
+    // TODO url endpoint need to be create
+    return `${env.get('BASE_API_URL')}/users/${userId}/avatar`
   }
 
   async getProfilesToShowForProfile(profile: Profile) {

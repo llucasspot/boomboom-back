@@ -8,14 +8,14 @@ import Profile from '#models/profile'
 import NotFountException from '#exceptions/not_fount.exception'
 import app from '@adonisjs/core/services/app'
 import vine from '@vinejs/vine'
+import { MultipartFile } from '@adonisjs/bodyparser'
+import Image, { ImageType } from '#models/image'
 
 type UserInfo = {
   id: string
-  email: string
   name: string | null
   dateOfBirth: DateTime
   description: string
-  avatarUrl: string
   genderId: Gender['id']
   preferedGenderId: Gender['id']
 }
@@ -28,6 +28,7 @@ export default class AuthController {
    * @swagger
    * /api/auth/logout:
    *  get:
+   *    operationId: logout
    *    security:
    *      - bearerAuth: []
    *    tags:
@@ -63,37 +64,28 @@ export default class AuthController {
    *          type: string
    *        name:
    *          type: string
-   *        email:
-   *          type: string
    *        dateOfBirth:
    *          type: string
    *          format: date-time
    *        description:
    *          type: string
-   *        avatarUrl:
-   *          type: string
-   *          format: uri
    *        genderId:
-   *          type: string
+   *          type: number
    *        preferedGenderId:
-   *          type: string
+   *          type: number
    *      required:
    *        - id
-   *        - email
    *        - name
    *        - dateOfBirth
-   *        - avatarUrl
    *        - genderId
    *        - preferedGenderId
    */
   private serializeUserInfo(user: User, profile: Profile) {
     return {
       id: user.id,
-      email: user.email,
       name: user.name,
       dateOfBirth: profile.dateOfBirth,
       description: profile.description,
-      avatarUrl: profile.avatarUrl,
       genderId: profile.genderId,
       preferedGenderId: profile.preferedGenderId,
     }
@@ -103,6 +95,7 @@ export default class AuthController {
    * @swagger
    * /api/auth/profile:
    *  get:
+   *    operationId: getProfile
    *    security:
    *      - bearerAuth: []
    *    tags:
@@ -130,6 +123,7 @@ export default class AuthController {
     user.name = data.name
     return user.save()
   }
+
   private async updateUserProfile(
     user: User,
     data: Pick<Profile, 'dateOfBirth' | 'description' | 'preferedGenderId' | 'genderId'>
@@ -138,8 +132,6 @@ export default class AuthController {
     // @ts-ignore TODO error type
     profile.dateOfBirth = DateTime.fromJSDate(data.dateOfBirth)
     profile.description = data.description
-    // TODO url
-    profile.avatarUrl = `/uploads/${this.buildAvatarFileName(user)}`
     profile.preferedGenderId = data.preferedGenderId
     profile.genderId = data.genderId
     profile.userId = user.id
@@ -150,10 +142,39 @@ export default class AuthController {
    * @swagger
    * /api/auth/profile:
    *  post:
+   *    operationId: createProfile
    *    security:
    *      - bearerAuth: []
    *    tags:
    *      - Auth
+   *    requestBody:
+   *      required: true
+   *      content:
+   *        application/json:
+   *          schema:
+   *            type: object
+   *            properties:
+   *              name:
+   *                $ref: '#/components/schemas/Profile/properties/name'
+   *              dateOfBirth:
+   *                $ref: '#/components/schemas/Profile/properties/dateOfBirth'
+   *              description:
+   *                $ref: '#/components/schemas/Profile/properties/description'
+   *              preferedGenderId:
+   *                $ref: '#/components/schemas/Profile/properties/preferedGenderId'
+   *              genderId:
+   *                $ref: '#/components/schemas/Profile/properties/genderId'
+   *              trackIds:
+   *                type: array
+   *                items:
+   *                  $ref: '#/components/schemas/Track/properties/id'
+   *            required:
+   *              - name
+   *              - dateOfBirth
+   *              - description
+   *              - preferedGenderId
+   *              - genderId
+   *              - trackIds
    *    responses:
    *      401:
    *        $ref: '#/components/responses/UnAuthorizedException'
@@ -189,10 +210,23 @@ export default class AuthController {
    * @swagger
    * /api/auth/profile/avatar:
    *  post:
+   *    operationId: uploadAvatar
    *    security:
    *      - bearerAuth: []
    *    tags:
    *      - Auth
+   *    requestBody:
+   *      content:
+   *        multipart/form-data:
+   *          schema:
+   *            type: object
+   *            properties:
+   *              avatar:
+   *                description: Image file to upload as the user's avatar
+   *                type: string
+   *                format: binary
+   *            required:
+   *              - avatar
    *    responses:
    *      401:
    *        $ref: '#/components/responses/UnAuthorizedException'
@@ -205,23 +239,16 @@ export default class AuthController {
    */
   async uploadUserAvatar({ auth, request }: HttpContext): Promise<UserInfo> {
     const user = auth.getUserOrFail()
-    const schema = vine.object({
-      avatar: vine.file({
-        size: '5mb',
-        extnames: ['jpg', 'png', 'jpeg'],
-      }),
-    })
-    console.log(request.body())
-    const { avatar } = await vine.validate({
-      schema,
-      data: {
-        avatar: request.file('avatar'),
-      },
-    })
-    await avatar.move(app.tmpPath('uploads'), {
-      name: this.buildAvatarFileName(user),
-      overwrite: true,
-    })
+    const avatarValidator = vine.compile(
+      vine.object({
+        avatar: vine.file({
+          size: '5mb',
+          extnames: ['jpg', 'png', 'jpeg'],
+        }),
+      })
+    )
+    const { avatar } = await request.validateUsing(avatarValidator)
+    await this.saveUserAvatarImage(user, avatar)
     const profile = await Profile.query().where('user_id', user.id).first()
     if (!profile) {
       throw new NotFountException()
@@ -229,7 +256,64 @@ export default class AuthController {
     return this.serializeUserInfo(user, profile)
   }
 
-  private buildAvatarFileName(user: User) {
-    return `${user.id}.avatar`
+  private buildAvatarFileName(user: User, file: MultipartFile) {
+    return `${user.id}.avatar.${file.extname}`
+  }
+
+  private async saveUserAvatarImage(user: User, file: MultipartFile): Promise<void> {
+    const fileName = this.buildAvatarFileName(user, file)
+    await file.move(app.makePath('uploads'), {
+      name: fileName,
+      overwrite: true,
+    })
+    const image = new Image()
+    image.userId = user.id
+    image.type = ImageType.AVATAR
+    image.fileName = fileName
+
+    // TODO Sharp not working
+    //  error : Could not load the "sharp" module using the darwin-arm64 runtime
+    // const sharpedImage = Sharp(file.tmpPath)
+    // const metadata = await sharpedImage.metadata()
+    // image.width = metadata.width
+    // image.height = metadata.height
+
+    await image.save()
+  }
+
+  /**
+   * @swagger
+   * /api/auth/profile/avatar:
+   *  get:
+   *    operationId: getAvatar
+   *    summary: Get user avatar image
+   *    security:
+   *      - bearerAuth: []
+   *    tags:
+   *      - Auth
+   *    responses:
+   *      401:
+   *        $ref: '#/components/responses/UnAuthorizedException'
+   *      404:
+   *        $ref: '#/components/responses/NotFountException'
+   *      200:
+   *        description: Returns the user avatar image
+   *        content:
+   *          image/jpeg:
+   *            schema:
+   *              type: string
+   *              format: binary
+   */
+  async getUserAvatar({ auth, response }: HttpContext): Promise<void> {
+    const user = auth.getUserOrFail()
+    const image = await Image.query()
+      .where('user_id', user.id)
+      .where('type', ImageType.AVATAR)
+      .first()
+    if (!image) {
+      throw new NotFountException()
+    }
+    const absolutePath = app.makePath('uploads', image.fileName)
+    return response.download(absolutePath)
   }
 }

@@ -12,6 +12,10 @@
     "schemas": {
       "id": { "type": "string", "format": "uuid" },
       "name": { "type": "string" },
+      "preferedGenderId": { "type": "number" },
+      "genderId": { "type": "number" },
+      "description": { "type": "string" },
+      "dateOfBirth": { "type": "string" },
       "SerializedTrack": {
         "type": "object",
         "properties": {
@@ -54,22 +58,12 @@
         "properties": {
           "id": { "type": "string" },
           "name": { "type": "string" },
-          "email": { "type": "string" },
           "dateOfBirth": { "type": "string", "format": "date-time" },
           "description": { "type": "string" },
-          "avatarUrl": { "type": "string", "format": "uri" },
-          "genderId": { "type": "string" },
-          "preferedGenderId": { "type": "string" }
+          "genderId": { "type": "number" },
+          "preferedGenderId": { "type": "number" }
         },
-        "required": [
-          "id",
-          "email",
-          "name",
-          "dateOfBirth",
-          "avatarUrl",
-          "genderId",
-          "preferedGenderId"
-        ]
+        "required": ["id", "name", "dateOfBirth", "genderId", "preferedGenderId"]
       },
       "Gender": {
         "type": "object",
@@ -80,6 +74,18 @@
           "updatedAt": { "type": "string", "format": "date-time" }
         },
         "required": ["id", "name", "createdAt", "updatedAt"]
+      },
+      "Image": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string", "enum": ["avatar"] },
+          "fileName": { "type": "string" },
+          "height": { "type": "number" },
+          "width": { "type": "number" },
+          "userId": { "type": "string" }
+        },
+        "required": ["id", "type", "fileName", "userId"]
       },
       "MatchRequest": {
         "type": "object",
@@ -353,6 +359,7 @@
     },
     "/api/auth/logout": {
       "get": {
+        "operationId": "logout",
         "security": [{ "bearerAuth": [] }],
         "tags": ["Auth"],
         "responses": {
@@ -363,6 +370,7 @@
     },
     "/api/auth/profile": {
       "get": {
+        "operationId": "getProfile",
         "security": [{ "bearerAuth": [] }],
         "tags": ["Auth"],
         "responses": {
@@ -376,8 +384,40 @@
         }
       },
       "post": {
+        "operationId": "createProfile",
         "security": [{ "bearerAuth": [] }],
         "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "$ref": "#/components/schemas/Profile/properties/name" },
+                  "dateOfBirth": { "$ref": "#/components/schemas/Profile/properties/dateOfBirth" },
+                  "description": { "$ref": "#/components/schemas/Profile/properties/description" },
+                  "preferedGenderId": {
+                    "$ref": "#/components/schemas/Profile/properties/preferedGenderId"
+                  },
+                  "genderId": { "$ref": "#/components/schemas/Profile/properties/genderId" },
+                  "trackIds": {
+                    "type": "array",
+                    "items": { "$ref": "#/components/schemas/Track/properties/id" }
+                  }
+                },
+                "required": [
+                  "name",
+                  "dateOfBirth",
+                  "description",
+                  "preferedGenderId",
+                  "genderId",
+                  "trackIds"
+                ]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success",
@@ -391,8 +431,26 @@
     },
     "/api/auth/profile/avatar": {
       "post": {
+        "operationId": "uploadAvatar",
         "security": [{ "bearerAuth": [] }],
         "tags": ["Auth"],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "description": "Image file to upload as the user's avatar",
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": ["avatar"]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success",
@@ -401,6 +459,20 @@
             }
           },
           "401": { "$ref": "#/components/responses/UnAuthorizedException" }
+        }
+      },
+      "get": {
+        "operationId": "getAvatar",
+        "summary": "Get user avatar image",
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Auth"],
+        "responses": {
+          "200": {
+            "description": "Returns the user avatar image",
+            "content": { "image/jpeg": { "schema": { "type": "string", "format": "binary" } } }
+          },
+          "401": { "$ref": "#/components/responses/UnAuthorizedException" },
+          "404": { "$ref": "#/components/responses/NotFountException" }
         }
       }
     }

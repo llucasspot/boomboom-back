@@ -55,9 +55,6 @@ export default class Profile extends BaseModel {
   @column()
   declare description: string
 
-  @column()
-  declare avatarUrl: string
-
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

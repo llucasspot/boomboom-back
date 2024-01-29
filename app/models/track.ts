@@ -49,30 +49,30 @@ export default class Track extends BaseModel {
   declare id: string
 
   @column()
-  declare name: string
+  declare name?: string
 
-  @column()
+  @column({ serializeAs: 'albumName' })
   declare albumName?: string
 
-  @column()
-  declare spotifyUri: string
+  @column({ serializeAs: 'spotifyUri' })
+  declare spotifyUri?: string
 
-  @column()
-  declare spotifyImage: string
+  @column({ serializeAs: 'spotifyImage' })
+  declare spotifyImage?: string
 
-  @column()
-  declare spotifyId: string
+  @column({ serializeAs: 'spotifyId' })
+  declare spotifyId?: string
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, serializeAs: 'createdAt' })
   declare createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: 'updatedAt' })
   declare updatedAt: DateTime | null
 
   /**
    * User relation
    */
-  @column()
+  @column({ serializeAs: 'userId' })
   declare userId: User['id']
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>

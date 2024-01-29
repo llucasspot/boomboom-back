@@ -37,9 +37,9 @@ export default class Gender extends BaseModel {
   @column()
   declare name: GenderName
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, serializeAs: 'createdAt' })
   declare createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: 'updatedAt' })
   declare updatedAt: DateTime | null
 }

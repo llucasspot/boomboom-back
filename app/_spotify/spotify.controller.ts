@@ -1,8 +1,7 @@
 import { inject } from '@adonisjs/fold'
 import SpotifyService from './spotify.service.js'
-import { SpotifySearchTrackResponse } from './beans/spotify_search_track.response.js'
 import { HttpContext } from '@adonisjs/core/http'
-import { FetchTracksByNameResponse, MappedTrack } from './beans/fetch_tracks_by_name.response.js'
+import { TrackObject } from '#api/spotify/api/api'
 
 @inject()
 export default class SpotifyController {
@@ -47,17 +46,16 @@ export default class SpotifyController {
    *        - popularity
    *        - name
    *        - trackId
-   *        - uri
    */
-  private serializeTrack(track: SpotifySearchTrackResponse['tracks']['items'][0]) {
+  private serializeTrack(track: TrackObject) {
     const artistNames = track.artists?.map((artist) => artist.name).join(', ')
     return {
       uri: track.uri,
       popularity: track.popularity,
       name: track.name,
       trackId: track.id,
-      album: track?.album?.name,
-      image: track?.album?.images?.[0],
+      album: track.album?.name,
+      image: track.album?.images?.[0],
       artistName: artistNames,
     }
   }
@@ -118,14 +116,14 @@ export default class SpotifyController {
    *              required:
    *                - data
    */
-  async getTrackByName({ request, auth }: HttpContext): Promise<FetchTracksByNameResponse> {
+  async getTrackByName({ request, auth }: HttpContext) {
     const user = auth.getUserOrFail()
     const userId = user.id
     const { name } = request.qs()
 
     const tracks = await this.spotifyService.getTracksByName(userId, name)
 
-    const mappedTracks: MappedTrack[] = tracks.map((track) => {
+    const mappedTracks = tracks.map((track) => {
       return this.serializeTrack(track)
     })
 

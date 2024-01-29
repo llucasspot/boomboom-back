@@ -1,18 +1,18 @@
 import { inject } from '@adonisjs/fold'
 import User from '#models/user'
-import { SpotifySearchTrackResponse } from '../_spotify/beans/spotify_search_track.response.js'
 import Track from '#models/track'
+import { TrackObject } from '#api/spotify/api/api'
 
 @inject()
 export default class TrackService {
-  async saveTracks(userId: User['id'], tracks: SpotifySearchTrackResponse['tracks']['items']) {
+  async saveTracks(userId: User['id'], tracks: TrackObject[]) {
     for (let track of tracks) {
       const newTrack = new Track()
       newTrack.name = track.name
       newTrack.spotifyId = track.id
-      newTrack.spotifyImage = track.href ?? track.album.href
+      newTrack.spotifyImage = track.album?.images[0].url
       newTrack.spotifyUri = track.uri
-      newTrack.albumName = track.album.name
+      newTrack.albumName = track.album?.name
       newTrack.userId = userId
       await newTrack.save()
     }

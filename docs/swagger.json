@@ -35,7 +35,7 @@
           },
           "artistName": { "type": "string" }
         },
-        "required": ["uri", "popularity", "name", "trackId", "uri"]
+        "required": ["uri", "popularity", "name", "trackId"]
       },
       "ProfileToShow": {
         "type": "object",
@@ -160,6 +160,54 @@
       }
     },
     "responses": {
+      "BadRequestException": {
+        "description": "Bad Request Exception",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string", "example": "BAD_REQUEST" },
+                      "code": { "type": "string", "example": "BAD_REQUEST" }
+                    },
+                    "required": ["message", "code"]
+                  }
+                }
+              },
+              "required": ["errors"]
+            }
+          }
+        }
+      },
+      "ForbiddenException": {
+        "description": "Forbidden Exception",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string", "example": "FORBIDDEN" },
+                      "code": { "type": "string", "example": "FORBIDDEN" }
+                    },
+                    "required": ["message", "code"]
+                  }
+                }
+              },
+              "required": ["errors"]
+            }
+          }
+        }
+      },
       "NotFountException": {
         "description": "Not Fount Exception",
         "content": {
@@ -172,9 +220,34 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "message": { "type": "string", "example": "NOT_FOUND: NOT_FOUND" }
+                      "message": { "type": "string", "example": "NOT_FOUND" },
+                      "code": { "type": "string", "example": "NOT_FOUND" }
                     },
-                    "required": ["message"]
+                    "required": ["message", "code"]
+                  }
+                }
+              },
+              "required": ["errors"]
+            }
+          }
+        }
+      },
+      "TechnicalException": {
+        "description": "Technical Exception",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string", "example": "TECHNICAL_ERROR" },
+                      "code": { "type": "string", "example": "TECHNICAL_ERROR" }
+                    },
+                    "required": ["message", "code"]
                   }
                 }
               },
@@ -195,12 +268,10 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "message": {
-                        "type": "string",
-                        "example": "E_UNAUTHORIZED_ACCESS: Unauthorized access"
-                      }
+                      "message": { "type": "string", "example": "Unauthorized access" },
+                      "code": { "type": "string", "example": "E_UNAUTHORIZED_ACCESS" }
                     },
-                    "required": ["message"]
+                    "required": ["message", "code"]
                   }
                 }
               },

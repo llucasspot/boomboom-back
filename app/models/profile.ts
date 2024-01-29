@@ -49,22 +49,22 @@ export default class Profile extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
-  @column.date({ autoCreate: false, autoUpdate: false })
+  @column.date({ autoCreate: false, autoUpdate: false, serializeAs: 'dateOfBirth' })
   declare dateOfBirth: DateTime
 
   @column()
   declare description: string
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, serializeAs: 'createdAt' })
   declare createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: 'updatedAt' })
   declare updatedAt: DateTime | null
 
   /**
    * User prefered gender relation
    */
-  @column()
+  @column({ serializeAs: 'preferedGenderId' })
   declare preferedGenderId: Gender['id']
   @belongsTo(() => Gender, { foreignKey: 'preferedGenderId' })
   declare preferedGender: BelongsTo<typeof Gender>
@@ -72,7 +72,7 @@ export default class Profile extends BaseModel {
   /**
    * User Gender relation
    */
-  @column()
+  @column({ serializeAs: 'genderId' })
   declare genderId: Gender['id']
   @belongsTo(() => Gender, { foreignKey: 'genderId' })
   declare gender: BelongsTo<typeof Gender>
@@ -80,7 +80,7 @@ export default class Profile extends BaseModel {
   /**
    * User relation
    */
-  @column()
+  @column({ serializeAs: 'userId' })
   declare userId: User['id']
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>

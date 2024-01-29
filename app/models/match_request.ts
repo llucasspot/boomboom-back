@@ -39,16 +39,16 @@ export default class MatchRequest extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, serializeAs: 'createdAt' })
   declare createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: 'updatedAt' })
   declare updatedAt: DateTime | null
 
   /**
    * Matcher user relation
    */
-  @column()
+  @column({ serializeAs: 'matcherUserId' })
   declare matcherUserId: User['id']
   @belongsTo(() => User, { foreignKey: 'matcherUserId' })
   declare matcherUser: BelongsTo<typeof User>
@@ -56,7 +56,7 @@ export default class MatchRequest extends BaseModel {
   /**
    * Matched user relation
    */
-  @column()
+  @column({ serializeAs: 'matchedUserId' })
   declare matchedUserId: User['id']
   @belongsTo(() => User, { foreignKey: 'matchedUserId' })
   declare matchedUser: BelongsTo<typeof User>

@@ -52,7 +52,7 @@ export default class AuthSpotifyController {
      * There was an unknown error during the redirect
      */
     if (spotify.hasError()) {
-      console.log(spotify.getError())
+      console.log('useSpotify : ', spotify.getError())
       throw new UnAuthorizedException('something went wrong with provider')
     }
     return spotify

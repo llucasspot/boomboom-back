@@ -44,7 +44,7 @@ export default class Image extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
-  @column()
+  @column({ serializeAs: 'fileName' })
   declare fileName: string
 
   @column()
@@ -56,16 +56,16 @@ export default class Image extends BaseModel {
   @column()
   declare width?: number
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, serializeAs: 'createdAt' })
   declare createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: 'updatedAt' })
   declare updatedAt: DateTime | null
 
   /**
    * User relation
    */
-  @column()
+  @column({ serializeAs: 'userId' })
   declare userId: User['id']
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>

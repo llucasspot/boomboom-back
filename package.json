@@ -12,7 +12,9 @@
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,json,css,md}'",
     "format-check": "prettier --check './**/*.{js,jsx,ts,tsx,json,css,md}'",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "seed:dev": "NODE_ENV=development node ace db:seed",
+    "swagger:generate": "openapi-generator-cli generate -i ./app/_api/spotify/open-api-schema.yaml -g typescript-axios -o ./app/_api/spotify/api --additional-properties=npmName=restClient,supportsES6=true,withInterfaces=true"
   },
   "imports": {
     "#controllers/*": "./app/controllers/*.js",
@@ -30,17 +32,21 @@
     "#database/*": "./database/*.js",
     "#start/*": "./start/*.js",
     "#tests/*": "./tests/*.js",
-    "#config/*": "./config/*.js"
+    "#config/*": "./config/*.js",
+    "#utils/*": "./app/utils/*.js",
+    "#api/*": "./app/_api/*.js"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^7.1.0",
     "@adonisjs/eslint-config": "^1.2.1",
     "@adonisjs/prettier-config": "^1.2.1",
     "@adonisjs/tsconfig": "^1.2.1",
+    "@faker-js/faker": "^8.4.0",
     "@japa/api-client": "^2.0.2",
     "@japa/assert": "^2.1.0",
     "@japa/plugin-adonisjs": "^3.0.0",
     "@japa/runner": "^3.1.1",
+    "@openapitools/openapi-generator-cli": "^2.9.0",
     "@swc/core": "^1.3.105",
     "@types/luxon": "^3.4.2",
     "@types/node": "^20.11.6",

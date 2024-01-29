@@ -20,6 +20,8 @@
       "#tests/*": ["./tests/*.js"],
       "#start/*": ["./start/*.js"],
       "#config/*": ["./config/*.js"],
+      "#utils/*": ["./app/utils/*.js"],
+      "#api/*": ["./app/_api/*.js"],
     },
   },
 }

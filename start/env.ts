@@ -48,7 +48,6 @@ export default await Env.create(new URL('../', import.meta.url), {
   HASH_DRIVER: Env.schema.enum.optional(Object.values(HashDriverName)),
   // DRIVE_DISK: Env.schema.enum.optional(Object.values(DriveDiskName)),
   // oauth providers
-  SPOTIFY_API_URL: Env.schema.string.optional(),
   SPOTIFY_CLIENT_ID: Env.schema.string(),
   SPOTIFY_CLIENT_SECRET: Env.schema.string(),
   SPOTIFY_CALLBACK_URL: Env.schema.string.optional({ format: 'url' }),

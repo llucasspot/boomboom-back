@@ -31,9 +31,13 @@ import { Exception } from '@adonisjs/core/exceptions'
  *                  properties:
  *                    message:
  *                      type: string
- *                      example: "E_UNAUTHORIZED_ACCESS: Unauthorized access"
+ *                      example: Unauthorized access
+ *                    code:
+ *                      type: string
+ *                      example: E_UNAUTHORIZED_ACCESS
  *                  required:
  *                    - message
+ *                    - code
  *            required:
  *              - errors
  */

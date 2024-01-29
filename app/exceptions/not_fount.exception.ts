@@ -31,9 +31,13 @@ import { Exception } from '@adonisjs/core/exceptions'
  *                  properties:
  *                    message:
  *                      type: string
- *                      example: "NOT_FOUND: NOT_FOUND"
+ *                      example: NOT_FOUND
+ *                    code:
+ *                      type: string
+ *                      example: NOT_FOUND
  *                  required:
  *                    - message
+ *                    - code
  *            required:
  *              - errors
  */

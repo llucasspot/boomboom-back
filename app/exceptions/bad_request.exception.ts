@@ -1,3 +1,6 @@
+import { ErrorCode } from '#exceptions/beans/error_code'
+import { Exception } from '@adonisjs/core/exceptions'
+
 /*
 |--------------------------------------------------------------------------
 | Exception
@@ -10,9 +13,34 @@
 | new UnAuthorizedException('message', 500, 'E_RUNTIME_EXCEPTION')
 |
 */
-import { ErrorCode } from '#exceptions/beans/error_code'
-import { Exception } from '@adonisjs/core/exceptions'
-
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *    BadRequestException:
+ *      description: Bad Request Exception
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              errors:
+ *                type: array
+ *                items:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                      example: BAD_REQUEST
+ *                    code:
+ *                      type: string
+ *                      example: BAD_REQUEST
+ *                  required:
+ *                    - message
+ *                    - code
+ *            required:
+ *              - errors
+ */
 export default class BadRequestException extends Exception {
   constructor(message: string = ErrorCode.BAD_REQUEST, code: string = ErrorCode.BAD_REQUEST) {
     super(message, {

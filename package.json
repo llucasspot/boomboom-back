@@ -14,7 +14,9 @@
     "format-check": "prettier --check './**/*.{js,jsx,ts,tsx,json,css,md}'",
     "typecheck": "tsc --noEmit",
     "seed:dev": "NODE_ENV=development node ace db:seed",
-    "swagger:generate": "openapi-generator-cli generate -i ./app/_api/spotify/open-api-schema.yaml -g typescript-axios -o ./app/_api/spotify/api --additional-properties=npmName=restClient,supportsES6=true,withInterfaces=true"
+    "swagger:spotify:generate": "openapi-generator-cli generate -i ./app/_api/spotify/open-api-schema.yaml -g typescript-axios -o ./swagger/spotify --type-mappings=DateTime=Date --additional-properties=npmName=swagger-spotify-backend,supportsES6=true,withInterfaces=true",
+    "swagger:spotify:link": "(cd ./swagger/spotify && yarn build); yarn link && cd ../../ && yarn link swagger-spotify-backend",
+    "swagger:spotify:update": "yarn swagger:spotify:generate && yarn swagger:spotify:link"
   },
   "imports": {
     "#controllers/*": "./app/controllers/*.js",
@@ -65,7 +67,7 @@
     "@adonisjs/lucid": "^19.0.0",
     "@adonisjs/session": "^7.1.1",
     "@vinejs/vine": "^1.7.0",
-    "adonisjs-6-swagger": "^1.0.0",
+    "adonisjs-6-swagger": "^1.0.1",
     "axios": "^1.6.5",
     "better-sqlite3": "^9.3.0",
     "luxon": "^3.4.4",

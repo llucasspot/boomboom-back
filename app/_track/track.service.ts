@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/fold'
 import User from '#models/user'
 import Track from '#models/track'
-import { TrackObject } from '#api/spotify/api/api'
+import { TrackObject } from 'swagger-spotify-backend'
 
 @inject()
 export default class TrackService {

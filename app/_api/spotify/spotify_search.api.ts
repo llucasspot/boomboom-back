@@ -1,9 +1,8 @@
 import AuthProviders from '#models/auth_providers'
 import User from '#models/user'
 import { buildApiRequester } from '#utils/api.utils'
-import { BASE_PATH } from '#api/spotify/api/base'
-import { SearchApi, SearchApiInterface } from '#api/spotify/api/api'
-import { Configuration } from '#api/spotify/api/configuration'
+import { Configuration, SearchApi, SearchApiInterface } from 'swagger-spotify-backend'
+import { BASE_PATH } from 'swagger-spotify-backend/dist/base.js'
 
 export class SpotifySearchApi extends SearchApi implements SearchApiInterface {
   constructor(userId: User['id']) {

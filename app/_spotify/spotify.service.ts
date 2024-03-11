@@ -7,7 +7,7 @@ import {
   GetUsersTopArtistsAndTracksTypeEnum,
   SearchTypeEnum,
   TrackObject,
-} from '#api/spotify/api/api'
+} from 'swagger-spotify-backend'
 
 @inject()
 export default class SpotifyService {

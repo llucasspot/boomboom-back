@@ -88,13 +88,22 @@ Upon user registration, it's crucial to save the user's Spotify preferences for 
    node ace db:seed
    ```
 
-5. **Start the Application**
+5. **generate swagger beans**
+
+   ```bash
+   node ace migration:run
+   npm run swagger:spotify:update
+   ```
+
+Do not worries about the errors
+
+6. **Start the Application**
 
    ```bash
    npm run dev
    ```
 
-6. **Access the API at**
+7. **Access the API at**
    - [http://localhost:3333/api](http://localhost:3333/api)
 
 ## API Documentation

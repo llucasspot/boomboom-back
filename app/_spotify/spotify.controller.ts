@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/fold'
 import SpotifyService from './spotify.service.js'
 import { HttpContext } from '@adonisjs/core/http'
-import { TrackObject } from '#api/spotify/api/api'
+import { TrackObject } from 'swagger-spotify-backend'
 
 @inject()
 export default class SpotifyController {

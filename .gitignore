@@ -26,3 +26,6 @@ yarn-error.log
 
 # file uploads folder
 uploads
+
+# generated beans from swagger
+swagger
